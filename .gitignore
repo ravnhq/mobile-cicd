@@ -1,1 +1,6 @@
 .idea
+
+# dotenv
+*.env.*
+*.env
+!.env.example
