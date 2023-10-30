@@ -84,12 +84,19 @@ platform :ios do
   lane :beta do
     authenticate
     build(type: 'development')
+    upload_to_testflight
+    commit_and_push
   end
 
-  desc 'Build an IPA file for release'
+  desc 'Build an IPA file for release (AppStore or Enterprise)'
   lane :release do
+    is_enterprise = parse_boolean(ENV['FL_APPLE_ENTERPRISE'] || 'false')
+
     authenticate
-    build(type: 'appstore')
+    build(type: is_enterprise ? 'enterprise' : 'appstore')
+    UI.message('Skipping upload to AppStore (FL_APPLE_ENTERPRISE is true)') if is_enterprise
+    upload_to_app_store unless is_enterprise
+    commit_and_push
   end
 
   desc 'Authenticate to Apple'
@@ -100,7 +107,7 @@ platform :ios do
       key_id: ENV['FL_APPLE_KEY_ID'],
       issuer_id: ENV['FL_APPLE_ISSUER_ID'],
       duration: 1200,
-      in_house: parse_boolean(ENV['FL_APPLE_IN_HOUSE'] || 'false'),
+      in_house: parse_boolean(ENV['FL_APPLE_ENTERPRISE'] || 'false'),
     )
   end
 
@@ -128,5 +135,12 @@ platform :ios do
     return projects.first if projects.length == 1
 
     UI.user_error!("Zero or more than one XCode projects found for '#{projects_glob}' (count: #{projects.length})")
+  end
+
+  desc 'Commit version bump and push'
+  private_lane :commit_and_push do
+    xcode_project = find_xcode_project
+    commit_version_bump(message: 'chore: Version bump', xcodeproj: xcode_project)
+    push_to_git_remote
   end
 end
