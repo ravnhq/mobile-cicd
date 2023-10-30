@@ -2,15 +2,17 @@
 
 #### Support for:
 
-- [ ] Android Native
-- [ ] iOS Native
+- [ ] Android 
+- [x] iOS 
 - [ ] React Native
+- [ ] Flutter
 
 #### Deployment types:
 
 - [ ] Android Play Store
-- [ ] iOS TestFlight
-- [ ] iOS AppStore
+- [ ] Android Play Store (Beta)
+- [x] iOS TestFlight
+- [x] iOS App Store
 
 # Configuration
 
@@ -26,5 +28,5 @@ fastlane --env release # loads .env.release
 
 ## Configure match
 
-Run `fastlane match init` to setup match based on your organization and project needs. For more information on the setup
+Run `fastlane match init` to set up match based on your organization and project needs. For more information on the setup
 of match visit [this link](https://docs.fastlane.tools/actions/match/#setup).
