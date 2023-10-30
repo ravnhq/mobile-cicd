@@ -6,6 +6,7 @@
 # noinspection JRubyUnusedImportInspection
 import './util/util.rb'
 
+# Optional: Change default platform if needed
 default_platform(:android)
 
 before_all do |_, _|
@@ -25,12 +26,17 @@ platform :android do
   lane :beta do
     build_task = get_build_task(default: 'aab')
     build(build_task:)
+    # TODO: Increment version code with build number and commit?
+    # Change gradle.properties, requires documentation on how to setup build.gradle(.kts)
+    upload_to_play_store(track: 'beta', track_promote_to: 'beta')
   end
 
   desc 'Build an application for release'
   lane :release do
     build_task = get_build_task(default: 'aab')
     build(build_task:)
+    # TODO: Increment version code with build number and commit?
+    upload_to_play_store
   end
 
   desc 'Build Android project'
@@ -74,7 +80,7 @@ platform :android do
     when 'aab'
       'bundle'
     else
-      raise "Unreachable statement, artifact type: #{artifact}"
+      raise "Unreachable statement, artifact type: #{artifact} (fixme)"
     end
   end
 end
