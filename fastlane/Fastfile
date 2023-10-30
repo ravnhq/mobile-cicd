@@ -57,13 +57,11 @@ platform :ios do
 
   desc 'Find main iOS XCode Project'
   private_lane :find_xcode_project do
-    glob = is_react_native || is_flutter ? './ios/*.xcodeproj' : './**/*.xcodeproj'
-    projects = Dir.glob(glob)
+    projects_glob = is_react_native || is_flutter ? './ios/*.xcodeproj' : './**/*.xcodeproj'
+    projects = Dir.glob(projects_glob)
 
-    if projects.length != 1
-      UI.user_error!("Zero or more than one XCode projects found for pattern #{glob} (count: #{projects.length})")
-    end
+    return projects.first if projects.length == 1
 
-    projects.first
+    UI.user_error!("Zero or more than one XCode projects found for '#{projects_glob}' (count: #{projects.length})")
   end
 end
