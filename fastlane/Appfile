@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
-app_identifier(ENV.fetch('FL_APP_IDENTIFIER')) # The bundle identifier of your app
+## iOS
+identifier = ENV['FL_APP_IDENTIFIER']
+UI.important('FL_APP_IDENTIFIER was not set, App Store upload won\'t work') unless identifier
+app_identifier(identifier) if identifier
 
 # Preferably set with FASTLANE_USERNAME
 # apple_id('[[APPLE_ID]]') # Your Apple Developer Portal username
@@ -10,3 +13,12 @@ team_id(env_team_id) if env_team_id
 
 env_itc_team_id = ENV['FL_ITC_TEAM_ID']
 itc_team_id(env_itc_team_id) if env_itc_team_id
+
+## Android
+android_name = ENV['FL_PACKAGE_NAME']
+UI.important('FL_PACKAGE_NAME was not set, Play Store upload won\'t work') unless android_name
+package_name(android_name) if android_name
+
+json_file = ENV['FL_GOOGLE_JSON_FILE']
+UI.important('FL_GOOGLE_JSON_FILE was not set, missing credentials to upload') unless json_file
+json_key_file(json_file) if json_file
