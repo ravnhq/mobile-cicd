@@ -18,12 +18,67 @@ before_all do |_, _|
 end
 
 platform :android do
-  desc 'Build an APK file for development (βeta)'
+  desc 'Build an application for development (βeta)'
   lane :beta do
+    build_task = get_build_task(default: 'aab')
+    build(build_task:)
   end
 
-  desc 'Build an AAB file for release'
+  desc 'Build an application for release'
   lane :release do
+    build_task = get_build_task(default: 'aab')
+    build(build_task:)
+  end
+
+  desc 'Build Android project'
+  private_lane :build do |options|
+    project_dir = is_react_native || is_flutter ? 'android/' : './'
+    gradle(task: 'clean', project_dir:)
+
+    android_build_type = ENV['FL_ANDROID_BUILD_TYPE'] || 'Release'
+    android_flavor = ENV['FL_ANDROID_FLAVOR']
+    android_store_file = ENV['FL_ANDROID_STORE_FILE']
+    android_store_password = ENV['FL_ANDROID_STORE_PASSWORD']
+    android_key_alias = ENV['FL_ANDROID_KEY_ALIAS']
+    android_key_password = ENV['FL_ANDROID_KEY_PASSWORD']
+
+    UI.message('No Android flavor set (FL_ANDROID_FLAVOR was not set)') unless android_flavor
+    UI.important('No Android store file set (FL_ANDROID_STORE_FILE was not set)') unless android_store_file
+    UI.important('No Android store password set (FL_ANDROID_STORE_PASSWORD was not set)') unless android_store_password
+    UI.important('No Android key alias set (FL_ANDROID_KEY_ALIAS was not set)') unless android_key_alias
+    UI.important('No Android key password set (FL_ANDROID_KEY_PASSWORD was not set)') unless android_key_password
+
+    gradle(
+      task: options[:build_task],
+      build_type: android_build_type,
+      flavor: android_flavor,
+      project_dir:,
+      properties: {
+        'android.injected.signing.store.file' => android_store_file,
+        'android.injected.signing.store.password' => android_store_password,
+        'android.injected.signing.key.alias' => android_key_alias,
+        'android.injected.signing.key.password' => android_key_password,
+      }
+    )
+  end
+
+  desc 'Get Android build task based on the artifact type: apk, aab'
+  private_lane :get_build_task do |options|
+    artifact = ENV['FL_ANDROID_ARTIFACT']
+    artifact = artifact.downcase.strip
+    unless %w[apk aab].include?(artifact)
+      UI.important("FL_ANDROID_ARTIFACT set to unknown value '#{artifact}', defaulting to '#{options[:default]}'")
+      artifact = options[:default]
+    end
+
+    case artifact
+    when 'apk'
+      'assemble'
+    when 'aab'
+      'bundle'
+    else
+      raise "Unreachable statement, artifact type: #{artifact}"
+    end
   end
 end
 
