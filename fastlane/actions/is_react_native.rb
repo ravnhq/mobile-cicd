@@ -2,16 +2,21 @@
 
 module Fastlane
   module Actions
-
     # Action to detect if project is React Native
     class IsReactNativeAction < Action
       def self.run(_params)
         return false unless File.exist?('package.json')
         return false unless Dir.exist?('android') && Dir.exist?('ios')
 
-        package_content = JSON.parse(File.read('package.json')) rescue return false
+        package_content = read_package_json
         react_native = package_content&.dig('dependencies')&.dig('react-native')
         react_native ? true : false
+      end
+
+      def self.read_package_json
+        JSON.parse(File.read('package.json'))
+      rescue StandardError
+        {}
       end
 
       #####################################################

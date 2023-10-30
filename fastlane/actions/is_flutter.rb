@@ -3,13 +3,19 @@ module Fastlane
 
     # Action to detect if project is Flutter
     class IsFlutterAction < Action
-      def self.run(params)
+      def self.run(_params)
         return false unless File.exist?('pubspec.yaml')
         return false unless Dir.exist?('lib') && (Dir.exist?('android') || Dir.exist?('ios'))
 
-        require 'psych'
-        pubspec_content = Psych.load_file('pubspec.yaml') rescue return false
+        pubspec_content = read_pubspec_yaml
         pubspec_content&.dig('dependencies')&.dig('flutter')&.dig('sdk') == 'flutter'
+      end
+
+      def self.read_pubspec_yaml
+        require 'psych'
+        Psych.load_file('pubspec.yaml')
+      rescue StandardError
+        {}
       end
 
       #####################################################
