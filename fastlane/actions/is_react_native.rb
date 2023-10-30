@@ -9,8 +9,9 @@ module Fastlane
         return false unless File.exist?('package.json')
         return false unless Dir.exist?('android') && Dir.exist?('ios')
 
-        package_content = JSON.parse(File.read('package.json'))
-        package_content['dependencies']['react-native'] ? true : false
+        package_content = JSON.parse(File.read('package.json')) rescue return false
+        react_native = package_content&.dig('dependencies')&.dig('react-native')
+        react_native ? true : false
       end
 
       #####################################################
