@@ -33,20 +33,14 @@ platform :android do
   desc 'Build Android project'
   private_lane :build do |options|
     project_dir = is_react_native || is_flutter ? 'android/' : './'
+
     gradle(task: 'clean', project_dir:)
 
     android_build_type = ENV['FL_ANDROID_BUILD_TYPE'] || 'Release'
     android_flavor = ENV['FL_ANDROID_FLAVOR']
-    android_store_file = ENV['FL_ANDROID_STORE_FILE']
-    android_store_password = ENV['FL_ANDROID_STORE_PASSWORD']
-    android_key_alias = ENV['FL_ANDROID_KEY_ALIAS']
-    android_key_password = ENV['FL_ANDROID_KEY_PASSWORD']
-
     UI.message('No Android flavor set (FL_ANDROID_FLAVOR was not set)') unless android_flavor
-    UI.important('No Android store file set (FL_ANDROID_STORE_FILE was not set)') unless android_store_file
-    UI.important('No Android store password set (FL_ANDROID_STORE_PASSWORD was not set)') unless android_store_password
-    UI.important('No Android key alias set (FL_ANDROID_KEY_ALIAS was not set)') unless android_key_alias
-    UI.important('No Android key password set (FL_ANDROID_KEY_PASSWORD was not set)') unless android_key_password
+    android_env_vars = %w[FL_ANDROID_STORE_FILE FL_ANDROID_STORE_PASSWORD FL_ANDROID_KEY_ALIAS FL_ANDROID_KEY_PASSWORD]
+    ensure_env_vars(env_vars: android_env_vars)
 
     gradle(
       task: options[:build_task],
@@ -54,10 +48,10 @@ platform :android do
       flavor: android_flavor,
       project_dir:,
       properties: {
-        'android.injected.signing.store.file' => android_store_file,
-        'android.injected.signing.store.password' => android_store_password,
-        'android.injected.signing.key.alias' => android_key_alias,
-        'android.injected.signing.key.password' => android_key_password,
+        'android.injected.signing.store.file' => ENV['FL_ANDROID_STORE_FILE'],
+        'android.injected.signing.store.password' => ENV['FL_ANDROID_STORE_PASSWORD'],
+        'android.injected.signing.key.alias' => ENV['FL_ANDROID_KEY_ALIAS'],
+        'android.injected.signing.key.password' => ENV['FL_ANDROID_KEY_PASSWORD']
       }
     )
   end
