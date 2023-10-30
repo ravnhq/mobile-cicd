@@ -5,9 +5,6 @@ identifier = ENV['FL_APP_IDENTIFIER']
 UI.important('FL_APP_IDENTIFIER was not set, App Store upload won\'t work') unless identifier
 app_identifier(identifier) if identifier
 
-# Preferably set with FASTLANE_USERNAME
-# apple_id('[[APPLE_ID]]') # Your Apple Developer Portal username
-
 env_team_id = ENV['FL_TEAM_ID']
 team_id(env_team_id) if env_team_id
 

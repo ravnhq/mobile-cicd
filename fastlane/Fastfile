@@ -3,6 +3,9 @@
 # Uncomment the line if you want fastlane to automatically update itself
 # update_fastlane
 
+# noinspection JRubyUnusedImportInspection
+import './util/util.rb'
+
 default_platform(:android)
 
 before_all do |_, _|
@@ -79,23 +82,36 @@ end
 platform :ios do
   desc 'Build an IPA file for development (βeta)'
   lane :beta do
+    authenticate
     build(type: 'development')
   end
 
   desc 'Build an IPA file for release'
   lane :release do
+    authenticate
     build(type: 'appstore')
+  end
+
+  desc 'Authenticate to Apple'
+  private_lane :authenticate do
+    ensure_env_vars(env_vars: %w[FL_APPLE_KEY_ID FL_APPLE_KEY_FILE FL_APPLE_ISSUER_ID])
+    app_store_connect_api_key(
+      key_file_path: ENV['FL_APPLE_KEY_FILE'],
+      key_id: ENV['FL_APPLE_KEY_ID'],
+      issuer_id: ENV['FL_APPLE_ISSUER_ID'],
+      duration: 1200,
+      in_house: parse_boolean(ENV['FL_APPLE_IN_HOUSE'] || 'false'),
+    )
   end
 
   desc 'Build iOS project'
   private_lane :build do |options|
+    ensure_env_vars(env_vars: %w[FL_IOS_SCHEME])
+
     xcode_project = find_xcode_project
     provision_certificates(type: options[:type])
     increment_build_number(xcodeproj: xcode_project)
-
-    ios_scheme = ENV['FL_IOS_SCHEME']
-    UI.user_error!('No iOS scheme provided (FL_IOS_SCHEME was not set)') unless ios_scheme
-    gym(scheme: ios_scheme, project: xcode_project)
+    gym(scheme: ENV['FL_IOS_SCHEME'], project: xcode_project)
   end
 
   desc 'Fetch certificates and provisioning profiles'
