@@ -57,8 +57,7 @@ platform :ios do
 
   desc 'Find main iOS XCode Project'
   private_lane :find_xcode_project do
-    # TODO: Include Flutter here (ex: 'is_flutter')
-    glob = is_react_native ? './ios/*.xcodeproj' : './**/*.xcodeproj'
+    glob = is_react_native || is_flutter ? './ios/*.xcodeproj' : './**/*.xcodeproj'
     projects = Dir.glob(glob)
 
     if projects.length != 1
