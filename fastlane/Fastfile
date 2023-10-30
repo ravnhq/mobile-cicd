@@ -18,8 +18,8 @@ before_all do |_, _|
 end
 
 platform :android do
-  desc 'Build an APK file for development'
-  lane :dev do
+  desc 'Build an APK file for development (βeta)'
+  lane :beta do
   end
 
   desc 'Build an AAB file for release'
@@ -28,8 +28,8 @@ platform :android do
 end
 
 platform :ios do
-  desc 'Build an IPA file for development'
-  lane :dev do
+  desc 'Build an IPA file for development (βeta)'
+  lane :beta do
     build(type: 'development')
   end
 
