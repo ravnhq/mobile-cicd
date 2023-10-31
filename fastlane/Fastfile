@@ -51,24 +51,21 @@ platform :android do
 
     gradle(task: 'clean', project_dir:)
 
-    android_build_type = ENV['FL_ANDROID_BUILD_TYPE'] || 'Release'
-    android_flavor = ENV['FL_ANDROID_FLAVOR']
-    UI.message('No Android flavor set (FL_ANDROID_FLAVOR was not set)') unless android_flavor
+    task = options[:build_task]
+    build_type = ENV['FL_ANDROID_BUILD_TYPE'] || 'Release'
+    flavor = ENV['FL_ANDROID_FLAVOR']
+
     android_env_vars = %w[FL_ANDROID_STORE_FILE FL_ANDROID_STORE_PASSWORD FL_ANDROID_KEY_ALIAS FL_ANDROID_KEY_PASSWORD]
     ensure_env_vars(env_vars: android_env_vars)
 
-    gradle(
-      task: options[:build_task],
-      build_type: android_build_type,
-      flavor: android_flavor,
-      project_dir:,
-      properties: {
-        'android.injected.signing.store.file' => ENV['FL_ANDROID_STORE_FILE'],
-        'android.injected.signing.store.password' => ENV['FL_ANDROID_STORE_PASSWORD'],
-        'android.injected.signing.key.alias' => ENV['FL_ANDROID_KEY_ALIAS'],
-        'android.injected.signing.key.password' => ENV['FL_ANDROID_KEY_PASSWORD']
-      }
-    )
+    properties = {
+      'android.injected.signing.store.file' => ENV['FL_ANDROID_STORE_FILE'],
+      'android.injected.signing.store.password' => ENV['FL_ANDROID_STORE_PASSWORD'],
+      'android.injected.signing.key.alias' => ENV['FL_ANDROID_KEY_ALIAS'],
+      'android.injected.signing.key.password' => ENV['FL_ANDROID_KEY_PASSWORD'],
+    }
+
+    gradle(task:, build_type:, flavor:, project_dir:, properties:)
   end
 
   desc 'Get Android build task based on the artifact type: apk, aab'
