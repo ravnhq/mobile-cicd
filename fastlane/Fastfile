@@ -24,8 +24,7 @@ end
 platform :android do
   desc 'Build an application for development (βeta)'
   lane :beta do
-    build_task = get_build_task(default: 'aab')
-    build(build_task:)
+    build(track: 'beta', default_artifact: 'aab')
     upload_to_play_store(track: 'beta', track_promote_to: 'beta')
 
     commit_increment = parse_boolean(ENV['FL_COMMIT_INCREMENT'] || 'true')
@@ -34,8 +33,7 @@ platform :android do
 
   desc 'Build an application for release'
   lane :release do
-    build_task = get_build_task(default: 'aab')
-    build(build_task:)
+    build(track: 'production', default_artifact: 'aab')
     upload_to_play_store
 
     commit_increment = parse_boolean(ENV['FL_COMMIT_INCREMENT'] || 'true')
@@ -46,10 +44,10 @@ platform :android do
   private_lane :build do |options|
     project_dir = is_react_native || is_flutter ? 'android/' : './'
 
-    increment_version_code(version_code: ENV['FL_BUILD_NUMBER'], project_dir:)
+    update_build_number(track: options[:track], project_dir:)
     gradle(task: 'clean', project_dir:)
 
-    task = options[:build_task]
+    task = get_build_task(default: options[:default_artifact] || 'aab')
     build_type = ENV['FL_ANDROID_BUILD_TYPE'] || 'Release'
     flavor = ENV['FL_ANDROID_FLAVOR']
 
@@ -67,6 +65,18 @@ platform :android do
     properties['fastlane.version.code'] = build_number if build_number
 
     gradle(task:, build_type:, flavor:, project_dir:, properties:)
+  end
+
+  desc 'Increment build number'
+  private_lane :update_build_number do |options|
+    build_number_env = ENV['FL_BUILD_NUMBER']
+    build_number = if build_number_env == 'store' && %w[beta production].include?(options[:track])
+                     google_play_track_version_codes(track: options[:track]) + 1
+                   else
+                     Integer(build_number_env, exception: false)
+                   end
+
+    increment_version_code(version_code: build_number, project_dir: options[:project_dir])
   end
 
   desc 'Get Android build task based on the artifact type: apk, aab'
@@ -137,15 +147,11 @@ platform :ios do
     ensure_env_vars(env_vars: %w[FL_IOS_SCHEME])
 
     xcode_project = find_xcode_project
-    provision_certificates(type: options[:type])
-    increment_build_number(build_number: ENV['FL_BUILD_NUMBER'], xcodeproj: xcode_project)
-    gym(scheme: ENV['FL_IOS_SCHEME'], project: xcode_project)
-  end
+    type = options[:type]
 
-  desc 'Fetch certificates and provisioning profiles'
-  private_lane :provision_certificates do |options|
-    identifier = CredentialsManager::AppfileConfig.try_fetch_value(:app_identifier)
-    match(app_identifier: identifier, type: options[:type], readonly: is_ci)
+    provision_certificates(type:)
+    update_build_number(type:, xcodeproj: xcode_project)
+    gym(scheme: ENV['FL_IOS_SCHEME'], project: xcode_project)
   end
 
   desc 'Find main iOS XCode Project'
@@ -156,6 +162,25 @@ platform :ios do
     return projects.first if projects.length == 1
 
     UI.user_error!("Zero or more than one XCode projects found for '#{projects_glob}' (count: #{projects.length})")
+  end
+
+  desc 'Fetch certificates and provisioning profiles'
+  private_lane :provision_certificates do |options|
+    identifier = CredentialsManager::AppfileConfig.try_fetch_value(:app_identifier)
+    match(app_identifier: identifier, type: options[:type], readonly: is_ci)
+  end
+
+  desc 'Increment build number'
+  private_lane :update_build_number do |options|
+    build_number_env = ENV['FL_BUILD_NUMBER']
+    build_number = if build_number_env == 'store' && %w[development appstore].include?(options[:type])
+                     live = options[:type] == 'appstore'
+                     app_store_build_number(live:) + 1
+                   else
+                     Integer(build_number_env, exception: false)
+                   end
+
+    increment_build_number(build_number:, xcodeproj: options[:xcodeproj])
   end
 
   desc 'Commit version bump and push'
