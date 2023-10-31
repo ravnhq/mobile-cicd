@@ -2,15 +2,15 @@
 
 #### Support for:
 
-- [ ] Android 
+- [x] Android 
 - [x] iOS 
-- [ ] React Native
-- [ ] Flutter
+- [x] React Native
+- [x] Flutter
 
 #### Deployment types:
 
-- [ ] Android Play Store
-- [ ] Android Play Store (Beta)
+- [x] Android Play Store
+- [x] Android Play Store (Beta)
 - [x] iOS TestFlight
 - [x] iOS App Store
 
@@ -30,3 +30,20 @@ fastlane --env release # loads .env.release
 
 Run `fastlane match init` to set up match based on your organization and project needs. For more information on the setup
 of match visit [this link](https://docs.fastlane.tools/actions/match/#setup).
+
+## Configure version code in Android
+Version code can be set automatically by this pipeline using the `version.code` property, to use it in your Android 
+project do the following:
+
+1. Set the initial value in your `gradle.properties` file _(optional)_
+   ```properties
+   version.code=1
+   ```
+2. Read and use property in your `build.gradle` file:
+   ```groovy
+   versionCode property('version.code').toInteger()
+   ```
+   or with Gradle KTS (`build.gradle.kts`):
+   ```kotlin
+   versionCode = property("version.code").toInt()
+   ```

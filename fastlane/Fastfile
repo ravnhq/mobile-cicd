@@ -26,8 +26,6 @@ platform :android do
   lane :beta do
     build_task = get_build_task(default: 'aab')
     build(build_task:)
-    # TODO: Increment version code with build number
-    # Change gradle.properties, requires documentation on how to setup build.gradle(.kts)
     upload_to_play_store(track: 'beta', track_promote_to: 'beta')
 
     commit_increment = parse_boolean(ENV['FL_COMMIT_INCREMENT'] || 'true')
@@ -38,7 +36,6 @@ platform :android do
   lane :release do
     build_task = get_build_task(default: 'aab')
     build(build_task:)
-    # TODO: Increment version code with build number
     upload_to_play_store
 
     commit_increment = parse_boolean(ENV['FL_COMMIT_INCREMENT'] || 'true')
@@ -49,6 +46,7 @@ platform :android do
   private_lane :build do |options|
     project_dir = is_react_native || is_flutter ? 'android/' : './'
 
+    increment_version_code(version_code: ENV['FL_BUILD_NUMBER'], project_dir:)
     gradle(task: 'clean', project_dir:)
 
     task = options[:build_task]
@@ -64,6 +62,9 @@ platform :android do
       'android.injected.signing.key.alias' => ENV['FL_ANDROID_KEY_ALIAS'],
       'android.injected.signing.key.password' => ENV['FL_ANDROID_KEY_PASSWORD'],
     }
+
+    build_number = ENV['FL_BUILD_NUMBER']
+    properties['fastlane.version.code'] = build_number if build_number
 
     gradle(task:, build_type:, flavor:, project_dir:, properties:)
   end
@@ -88,7 +89,10 @@ platform :android do
   end
 
   private_lane :commit_and_push do
-
+    project_dir = is_react_native || is_flutter ? 'android/' : './'
+    properties_path = File.join(project_dir, 'gradle.properties')
+    git_commit(path: [properties_path], message: 'chore: Version bump')
+    push_to_git_remote
   end
 end
 
