@@ -123,7 +123,7 @@ platform :ios do
 
     xcode_project = find_xcode_project
     provision_certificates(type: options[:type])
-    increment_build_number(xcodeproj: xcode_project)
+    increment_build_number(build_number: ENV['FL_BUILD_NUMBER'], xcodeproj: xcode_project)
     gym(scheme: ENV['FL_IOS_SCHEME'], project: xcode_project)
   end
 
