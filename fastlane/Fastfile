@@ -26,17 +26,23 @@ platform :android do
   lane :beta do
     build_task = get_build_task(default: 'aab')
     build(build_task:)
-    # TODO: Increment version code with build number and commit?
+    # TODO: Increment version code with build number
     # Change gradle.properties, requires documentation on how to setup build.gradle(.kts)
     upload_to_play_store(track: 'beta', track_promote_to: 'beta')
+
+    commit_increment = parse_boolean(ENV['FL_COMMIT_INCREMENT'] || 'true')
+    commit_and_push if commit_increment
   end
 
   desc 'Build an application for release'
   lane :release do
     build_task = get_build_task(default: 'aab')
     build(build_task:)
-    # TODO: Increment version code with build number and commit?
+    # TODO: Increment version code with build number
     upload_to_play_store
+
+    commit_increment = parse_boolean(ENV['FL_COMMIT_INCREMENT'] || 'true')
+    commit_and_push if commit_increment
   end
 
   desc 'Build Android project'
@@ -83,6 +89,10 @@ platform :android do
       raise "Unreachable statement, artifact type: #{artifact} (fixme)"
     end
   end
+
+  private_lane :commit_and_push do
+
+  end
 end
 
 platform :ios do
@@ -91,7 +101,9 @@ platform :ios do
     authenticate
     build(type: 'development')
     upload_to_testflight
-    commit_and_push
+
+    commit_increment = parse_boolean(ENV['FL_COMMIT_INCREMENT'] || 'false')
+    commit_and_push if commit_increment
   end
 
   desc 'Build an IPA file for release (AppStore or Enterprise)'
@@ -102,7 +114,9 @@ platform :ios do
     build(type: is_enterprise ? 'enterprise' : 'appstore')
     UI.message('Skipping upload to AppStore (FL_APPLE_ENTERPRISE is true)') if is_enterprise
     upload_to_app_store unless is_enterprise
-    commit_and_push
+
+    commit_increment = parse_boolean(ENV['FL_COMMIT_INCREMENT'] || 'false')
+    commit_and_push if commit_increment
   end
 
   desc 'Authenticate to Apple'
