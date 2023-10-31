@@ -27,7 +27,7 @@ platform :android do
     build(track: 'beta', default_artifact: 'aab')
     upload_to_play_store(track: 'beta', track_promote_to: 'beta')
 
-    commit_increment = parse_boolean(ENV['FL_COMMIT_INCREMENT'] || 'true')
+    commit_increment = parse_boolean(ENV['FL_COMMIT_INCREMENT'] || 'false')
     commit_and_push if commit_increment
   end
 
@@ -36,7 +36,7 @@ platform :android do
     build(track: 'production', default_artifact: 'aab')
     upload_to_play_store
 
-    commit_increment = parse_boolean(ENV['FL_COMMIT_INCREMENT'] || 'true')
+    commit_increment = parse_boolean(ENV['FL_COMMIT_INCREMENT'] || 'false')
     commit_and_push if commit_increment
   end
 
