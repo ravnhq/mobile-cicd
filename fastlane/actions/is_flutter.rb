@@ -1,5 +1,8 @@
 module Fastlane
   module Actions
+    module SharedValues
+      IS_FLUTTER_PROJECT = :IS_FLUTTER_PROJECT
+    end
 
     # Action to detect if project is Flutter
     class IsFlutterAction < Action
@@ -8,7 +11,10 @@ module Fastlane
         return false unless Dir.exist?('lib') && (Dir.exist?('android') || Dir.exist?('ios'))
 
         pubspec_content = read_pubspec_yaml
-        pubspec_content&.dig('dependencies')&.dig('flutter')&.dig('sdk') == 'flutter'
+        is_flutter = pubspec_content&.dig('dependencies')&.dig('flutter')&.dig('sdk') == 'flutter'
+        Action.lane_context[SharedValues::IS_FLUTTER_PROJECT] = is_flutter
+
+        is_flutter
       end
 
       def self.read_pubspec_yaml
@@ -28,6 +34,12 @@ module Fastlane
 
       def self.details
         'The return value of this action is true if a Flutter project is detected'
+      end
+
+      def self.output
+        [
+          'IS_FLUTTER_PROJECT', 'Whether or not the project uses Flutter'
+        ]
       end
 
       def self.available_options

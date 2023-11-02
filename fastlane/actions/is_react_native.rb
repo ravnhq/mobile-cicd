@@ -2,6 +2,10 @@
 
 module Fastlane
   module Actions
+    module SharedValues
+      IS_REACT_NATIVE_PROJECT = :IS_REACT_NATIVE_PROJECT
+    end
+
     # Action to detect if project is React Native
     class IsReactNativeAction < Action
       def self.run(_params)
@@ -9,13 +13,15 @@ module Fastlane
         return false unless Dir.exist?('android') && Dir.exist?('ios')
 
         package_contents = read_package_json
-        react_native = package_contents&.dig('dependencies')&.dig('react-native')
-        react_native ? true : false
+        is_react_native = package_contents&.dig('dependencies')&.dig('react-native') ? true : false
+        Action.lane_context[SharedValues::IS_REACT_NATIVE_PROJECT] = is_react_native
+
+        is_react_native
       end
 
       def self.read_package_json
         JSON.parse(File.read('package.json'))
-      rescue StandardError0
+      rescue StandardError
         {}
       end
 
@@ -29,6 +35,12 @@ module Fastlane
 
       def self.details
         'The return value of this action is true if a React Native project is detected'
+      end
+
+      def self.output
+        [
+          'IS_REACT_NATIVE_PROJECT', 'Whether or not the project uses React Native'
+        ]
       end
 
       def self.available_options
