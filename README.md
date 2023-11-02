@@ -68,7 +68,9 @@ project do the following:
 
 # Frameworks
 
-## Expo
+## Expo (or [adopted Prebuild](https://docs.expo.dev/guides/adopting-prebuild/))
+
+#### iOS identifier and Android package name
 
 Run `npx expo prebuild` at least once to generate an initial `app.json` config for your project, inside that
 configuration file make sure that the value for `expo.ios.bundleIdentifier` matches the value for the environment
