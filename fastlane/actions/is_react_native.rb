@@ -8,14 +8,14 @@ module Fastlane
         return false unless File.exist?('package.json')
         return false unless Dir.exist?('android') && Dir.exist?('ios')
 
-        package_content = read_package_json
-        react_native = package_content&.dig('dependencies')&.dig('react-native')
+        package_contents = read_package_json
+        react_native = package_contents&.dig('dependencies')&.dig('react-native')
         react_native ? true : false
       end
 
       def self.read_package_json
         JSON.parse(File.read('package.json'))
-      rescue StandardError
+      rescue StandardError0
         {}
       end
 
