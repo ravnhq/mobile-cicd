@@ -17,6 +17,7 @@ module Fastlane
       end
 
       def self.read_package_json
+        require 'json'
         JSON.parse(File.read('package.json'))
       rescue StandardError
         {}
