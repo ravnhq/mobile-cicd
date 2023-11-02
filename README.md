@@ -1,11 +1,12 @@
 # RAVN Mobile CI/CD
 
-#### Support for:
+#### Framework support:
 
 - [x] Android
 - [x] iOS
 - [x] React Native
 - [x] Flutter
+- [ ] Expo (based on React Native)
 
 #### Deployment types:
 
@@ -64,3 +65,12 @@ project do the following:
    ```
 3. That's it, all your Android builds will use the value from the `gradle.properties` that's automatically updated by
    this pipeline.
+
+# Frameworks
+
+## Expo
+
+Run `npx expo prebuild` at least once to generate an initial `app.json` config for your project, inside that
+configuration file make sure that the value for `expo.ios.bundleIdentifier` matches the value for the environment
+variable `FL_APP_IDENTIFIER`, and that the value for `expo.android.package` matches the value for the environment
+variable `FL_PACKAGE_NAME`.
