@@ -16,7 +16,7 @@ module Fastlane
       end
 
       def self.details
-        'Execute `npx expo prebuild --clean` to configure android and ios native projects'
+        'Execute `npx expo prebuild --clean` to configure Android and iOS native projects'
       end
 
       def self.available_options
