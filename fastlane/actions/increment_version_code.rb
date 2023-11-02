@@ -7,12 +7,12 @@ module Fastlane
     # Action to increment version code in gradle.properties
     class IncrementVersionCodeAction < Action
       def self.run(params)
-        version_code = params[:version_code]
         project_dir = params[:project_dir]
 
         properties_file = File.join(project_dir, 'gradle.properties')
         properties_contents = File.read(properties_file)
 
+        version_code = params[:version_code]
         version_code = get_version_code(properties_contents) if version_code.nil?
         version_code = [version_code.to_i, 1].max
 
