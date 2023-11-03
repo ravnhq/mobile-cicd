@@ -3,8 +3,8 @@
 # Uncomment the line if you want fastlane to automatically update itself
 # update_fastlane
 
-# noinspection JRubyUnusedImportInspection
 import './util/util.rb'
+import './lanes/common.rb'
 
 # Optional: Change default platform if needed
 # default_platform(:android)
@@ -19,11 +19,6 @@ before_all do |_, _|
 
   # Optional: Execute extra actions after this line
   # List of all available actions: https://docs.fastlane.tools/actions
-end
-
-desc 'Commit version bump for Expo projects'
-private_lane :commit_expo_app_json do
-  git_commit(path: ['app.json'], message: 'chore: Version bump')
 end
 
 platform :android do
