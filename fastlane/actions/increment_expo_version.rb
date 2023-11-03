@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'json'
 
 module Fastlane
@@ -15,8 +16,8 @@ module Fastlane
 
       def self.run(params)
         platform = params[:platform]
-        self.increment_android_version_code(params[:android_version_code]) if %w[android both].include?(platform)
-        self.increment_ios_build_number(params[:ios_build_number]) if %w[ios both].include?(platform)
+        increment_android_version_code(params[:android_version_code]) if %w[android both].include?(platform)
+        increment_ios_build_number(params[:ios_build_number]) if %w[ios both].include?(platform)
       end
 
       def self.increment_android_version_code(version_code)
