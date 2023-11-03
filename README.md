@@ -16,8 +16,7 @@
 - [x] iOS App Store
 
 #### TODO
-- [ ] Handle XWorkspaces for iOS
-- [ ] 
+- [ ] Handle XWorkspaces for iOS projects
 
 # Authentication
 
