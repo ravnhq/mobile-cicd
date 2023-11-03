@@ -7,7 +7,7 @@
 import './util/util.rb'
 
 # Optional: Change default platform if needed
-default_platform(:android)
+# default_platform(:android)
 
 before_all do |_, _|
   enforced_branch = ENV['FL_ENFORCED_BRANCH']
