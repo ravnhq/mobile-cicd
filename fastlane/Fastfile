@@ -21,6 +21,11 @@ before_all do |_, _|
   # List of all available actions: https://docs.fastlane.tools/actions
 end
 
+desc 'Commit version bump for Expo projects'
+private_lane :commit_expo_app_json do
+  git_commit(path: ['app.json'], message: 'chore: Version bump')
+end
+
 platform :android do
   desc 'Build an application for development (βeta)'
   lane :beta do
@@ -42,7 +47,7 @@ platform :android do
 
   desc 'Build Android project'
   private_lane :build do |options|
-    project_dir = is_react_native || is_flutter ? 'android/' : './'
+    project_dir = is_react_native || is_flutter || is_expo ? 'android/' : './'
 
     update_build_number(track: options[:track], project_dir:)
     gradle(task: 'clean', project_dir:)
@@ -76,7 +81,12 @@ platform :android do
                      Integer(build_number_env, exception: false)
                    end
 
-    increment_version_code(version_code: build_number, project_dir: options[:project_dir])
+    if is_expo
+      increment_expo_version(android_version_code: build_number, platform: 'android')
+      setup_expo_project
+    else
+      increment_version_code(version_code: build_number, project_dir: options[:project_dir])
+    end
   end
 
   desc 'Get Android build task based on the artifact type: apk, aab'
@@ -98,10 +108,16 @@ platform :android do
     end
   end
 
+  desc 'Commit version bump and push'
   private_lane :commit_and_push do
-    project_dir = is_react_native || is_flutter ? 'android/' : './'
-    properties_path = File.join(project_dir, 'gradle.properties')
-    git_commit(path: [properties_path], message: 'chore: Version bump')
+    if is_expo
+      commit_expo_app_json
+    else
+      project_dir = is_react_native || is_flutter ? 'android/' : './'
+      properties_path = File.join(project_dir, 'gradle.properties')
+      git_commit(path: [properties_path], message: 'chore: Version bump')
+    end
+
     push_to_git_remote
   end
 end
@@ -145,6 +161,7 @@ platform :ios do
   desc 'Build iOS project'
   private_lane :build do |options|
     ensure_env_vars(env_vars: %w[FL_IOS_SCHEME])
+    setup_expo_project if is_expo # needs to be done before searching for an XCode project
 
     xcode_project = find_xcode_project
     type = options[:type]
@@ -156,7 +173,7 @@ platform :ios do
 
   desc 'Find main iOS XCode Project'
   private_lane :find_xcode_project do
-    projects_glob = is_react_native || is_flutter ? './ios/*.xcodeproj' : './**/*.xcodeproj'
+    projects_glob = is_react_native || is_flutter || is_expo ? './ios/*.xcodeproj' : './**/*.xcodeproj'
     projects = Dir.glob(projects_glob)
 
     return projects.first if projects.length == 1
@@ -180,13 +197,22 @@ platform :ios do
                      Integer(build_number_env, exception: false)
                    end
 
-    increment_build_number(build_number:, xcodeproj: options[:xcodeproj])
+    if is_expo
+      increment_expo_version(ios_build_number: build_number, platform: 'ios')
+      setup_expo_project
+    else
+      increment_build_number(build_number:, xcodeproj: options[:xcodeproj])
+    end
   end
 
   desc 'Commit version bump and push'
   private_lane :commit_and_push do
-    xcode_project = find_xcode_project
-    commit_version_bump(message: 'chore: Version bump', xcodeproj: xcode_project)
+    if is_expo
+      commit_expo_app_json
+    else
+      commit_version_bump(message: 'chore: Version bump', xcodeproj: find_xcode_project)
+    end
+
     push_to_git_remote
   end
 end

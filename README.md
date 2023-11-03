@@ -6,7 +6,7 @@
 - [x] iOS
 - [x] React Native
 - [x] Flutter
-- [ ] Expo (based on React Native)
+- [x] Expo (based on React Native)
 
 #### Deployment types:
 
@@ -14,6 +14,10 @@
 - [x] Android Play Store (Beta)
 - [x] iOS TestFlight
 - [x] iOS App Store
+
+#### TODO
+- [ ] Handle XWorkspaces for iOS
+- [ ] 
 
 # Authentication
 
@@ -70,9 +74,19 @@ project do the following:
 
 ## Expo (or [adopted Prebuild](https://docs.expo.dev/guides/adopting-prebuild/))
 
+> **Note:** Only app configurations written in JSON are supported at the moment (i.e. `app.json`)
+
 #### iOS identifier and Android package name
 
-Run `npx expo prebuild` at least once to generate an initial `app.json` config for your project, inside that
-configuration file make sure that the value for `expo.ios.bundleIdentifier` matches the value for the environment
-variable `FL_APP_IDENTIFIER`, and that the value for `expo.android.package` matches the value for the environment
-variable `FL_PACKAGE_NAME`.
+> **Prerequisite:** Run `npx expo prebuild` to generate an initial `app.json` file or write one yourself.
+
+Inside your `app.json` file make sure that the values for `expo.ios.bundleIdentifier` and `expo.android.package` are not
+empty, and they match the values for the environment variables `FL_APP_IDENTIFIER` and `FL_PACKAGE_NAME` respectively.
+
+#### Application versioning
+
+> **Prerequisite:** Run `npx expo prebuild` to generate an initial `app.json` file or write one yourself.
+
+Inside your `app.json` file write the initial values for `expo.android.versionCode`
+and `expo.ios.buildNumber`, if not found by default starts with 1. Other versioning rules from environment variables
+still apply (for example, `FL_BUILD_NUMBER=store` and `FL_COMMIT_INCREMENT=true`)
