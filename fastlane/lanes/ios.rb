@@ -15,25 +15,38 @@ end
 desc 'Build iOS project'
 private_lane :build do |options|
   ensure_env_vars(env_vars: %w[FL_IOS_SCHEME])
-  setup_expo_project if is_expo # needs to be done before searching for an XCode project
+  setup_expo_project if is_expo # needs to be done before searching
 
-  xcode_project = find_xcode_project
+  xcworkspace = ENV['FL_XCODE_WORKSPACE'] || find_xcode_workspace
+  xcodeproj = ENV['FL_XCODE_PROJ'] || find_xcode_project
+
+  UI.message("Couldn't find XCode workspace automatically") unless xcworkspace
+  UI.user_error!("Couldn't find XCode project automatically (set FL_XCODE_PROJECT)") unless xcodeproj
+
   type = options[:type]
   live = options[:env] == 'release'
 
   provision_certificates(type:)
-  update_build_number(type:, live:, xcodeproj: xcode_project)
-  gym(scheme: ENV['FL_IOS_SCHEME']&.trim, project: xcode_project)
+  update_build_number(type:, live:, xcodeproj:)
+
+  scheme = ENV['FL_IOS_SCHEME']&.trim
+  # use only workspace if available (avoid conflict)
+  project = xcworkspace ? nil : xcodeproj
+  gym(scheme:, workspace: xcworkspace, project:)
+end
+
+desc 'Find main iOS XCode Workspace'
+private_lane :find_xcode_workspace do
+  workspaces_glob = is_react_native || is_flutter || is_expo ? './ios/*.xcworkspace' : './*.xcworkspace'
+  workspaces = Dir.glob(workspaces_glob)
+  workspaces.length == 1 ? workspaces.first : nil
 end
 
 desc 'Find main iOS XCode Project'
 private_lane :find_xcode_project do
-  projects_glob = is_react_native || is_flutter || is_expo ? './ios/*.xcodeproj' : './**/*.xcodeproj'
+  projects_glob = is_react_native || is_flutter || is_expo ? './ios/*.xcodeproj' : './*.xcodeproj'
   projects = Dir.glob(projects_glob)
-
-  return projects.first if projects.length == 1
-
-  UI.user_error!("Zero or more than one XCode projects found for '#{projects_glob}' (count: #{projects.length})")
+  projects.length == 1 ? projects.first : nil
 end
 
 desc 'Fetch certificates and provisioning profiles'
