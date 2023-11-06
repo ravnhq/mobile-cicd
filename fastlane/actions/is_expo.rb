@@ -11,9 +11,7 @@ module Fastlane
 
         package_contents = read_package_json
         is_expo = package_contents&.dig('dependencies')&.dig('expo') ? true : false
-        Action.lane_context[SharedValues::IS_EXPO_PROJECT] = is_expo
-
-        is_expo
+        return Action.lane_context[SharedValues::IS_EXPO_PROJECT] = is_expo
       end
 
       def self.read_package_json
