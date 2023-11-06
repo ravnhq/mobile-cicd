@@ -13,6 +13,7 @@ before_all do |_, _|
   enforced_branch = ENV['FL_ENFORCED_BRANCH']
   UI.important('Fastlane is being run in a CI service, but no branch was enforced') if is_ci && !enforced_branch
 
+  setup_ci if is_ci
   ensure_git_branch(branch: enforced_branch) if enforced_branch
   ensure_git_status_clean
   git_pull if enforced_branch
