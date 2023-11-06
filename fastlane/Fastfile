@@ -51,7 +51,7 @@ platform :ios do
     is_enterprise = parse_boolean(ENV['FL_APPLE_ENTERPRISE'] || 'false')
 
     authenticate
-    build(type: is_enterprise ? 'enterprise' : 'appstore')
+    build(type: is_enterprise ? 'enterprise' : 'appstore', env: 'beta')
     UI.message('Skipping upload to TestFlight (FL_APPLE_ENTERPRISE is true)') if is_enterprise
     upload_to_testflight unless is_enterprise
 
@@ -64,7 +64,7 @@ platform :ios do
     is_enterprise = parse_boolean(ENV['FL_APPLE_ENTERPRISE'] || 'false')
 
     authenticate
-    build(type: is_enterprise ? 'enterprise' : 'appstore')
+    build(type: is_enterprise ? 'enterprise' : 'appstore', env: 'release')
     UI.message('Skipping upload to AppStore (FL_APPLE_ENTERPRISE is true)') if is_enterprise
     upload_to_app_store unless is_enterprise
 

@@ -19,9 +19,10 @@ private_lane :build do |options|
 
   xcode_project = find_xcode_project
   type = options[:type]
+  live = options[:env] == 'release'
 
   provision_certificates(type:)
-  update_build_number(type:, xcodeproj: xcode_project)
+  update_build_number(type:, live:, xcodeproj: xcode_project)
   gym(scheme: ENV['FL_IOS_SCHEME']&.trim, project: xcode_project)
 end
 
