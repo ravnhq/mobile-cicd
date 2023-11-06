@@ -15,8 +15,20 @@
 - [x] iOS TestFlight
 - [x] iOS App Store
 
-#### TODO
-- [ ] Handle XWorkspaces for iOS projects
+# Setup
+
+Run the following commands to copy the configuration files contained in this repository into your own project:
+
+```shell
+cd <your-project-dir>
+git clone https://github.com/ravnhq/mobile-cicd/ 
+chmod +x ./mobile-cicd/copy_files.sh # make it executable
+./mobile-cicd/copy_files.sh
+```
+
+The script will copy the configuration files over the root directory of your project, checking if any of them already
+exist and asking for your confirmation before replacing any of them. If a `fastlane` directory is already present, the
+script will rename it to `fastlane.old`.
 
 # Authentication
 
@@ -46,8 +58,7 @@ fastlane --env release # loads .env.release
 ## Configure match
 
 Run `fastlane match init` to set up match based on your organization and project needs. For more information on the
-setup
-of match visit [this link](https://docs.fastlane.tools/actions/match/#setup).
+setup of match visit [this link](https://docs.fastlane.tools/actions/match/#setup).
 
 ## Configure version code in Android
 
