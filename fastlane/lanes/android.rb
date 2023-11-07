@@ -29,7 +29,7 @@ end
 
 desc 'Increment build number'
 private_lane :update_build_number do |options|
-  build_number_env = ENV['FL_BUILD_NUMBER']&.downcase&.trim
+  build_number_env = ENV['FL_BUILD_NUMBER']&.downcase&.strip
 
   build_number = nil
   if %w[beta production].include?(options[:track]) && build_number_env == 'store'
