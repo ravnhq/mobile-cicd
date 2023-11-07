@@ -1,0 +1,58 @@
+name: 'Fastlane iOS'
+description: 'Execute fastlane pipeline for iOS'
+inputs:
+  enforced-branch:
+    description: 'Branch to enforce, recommended (supports regex)'
+    required: false
+  commit-increment:
+    description: 'Whether or not to commit and push version increment'
+    required: false
+    default: 'false'
+  publish-build:
+    description: 'Whether or not to publish build artifacts to the App Store (or TestFlight)'
+    required: false
+    default: 'true'
+  app-identifier:
+    description: 'App Store application bundle identifier'
+    required: true
+  team-id:
+    description: 'App Store Connect Team ID (if any)'
+    required: false
+  itc-team-id:
+    description: 'iTunes Connect Team ID (if any)'
+    required: false
+  scheme:
+    description: 'iOS project scheme to build'
+    required: false
+    default: 'Release'
+  xcodeproj:
+    description: 'Path to main XCode project (required if not found automatically)'
+    required: false
+  xcworkspace:
+    description: 'Path to main XCode workspace'
+    required: false
+  apple-key-id:
+    description: 'Apple App Store Connect Key ID'
+    required: true
+  apple-issuer-id:
+    description: 'Apple App Store Connect Issuer ID'
+    required: true
+  apple-key-base64:
+    description: 'Apple App Store Connect Key contents (.p8) in base64'
+    required: true
+  match-password:
+    description: 'Password to encrypt/decrypt certificates using match'
+    required: true
+runs:
+  using: 'composite'
+  steps:
+    - uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: '3.1.2'
+        bundler-cache: true
+    - id: create-apple-key-file
+      if: ${{ inputs.apple-key-base64 != '' }}
+      shell: bash
+      run: |
+        echo "${{ inputs.apple-key-base64 }}" | base64 -d > __apple_key.p8
+        echo "apple-key-file=$(pwd)/__apple_key.p8" >> $GITHUB_OUTPUT
