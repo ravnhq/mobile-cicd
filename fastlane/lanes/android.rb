@@ -18,7 +18,7 @@ private_lane :build do |options|
     'android.injected.signing.store.file' => ENV['FL_ANDROID_STORE_FILE'],
     'android.injected.signing.store.password' => ENV['FL_ANDROID_STORE_PASSWORD'],
     'android.injected.signing.key.alias' => ENV['FL_ANDROID_KEY_ALIAS'],
-    'android.injected.signing.key.password' => ENV['FL_ANDROID_KEY_PASSWORD'],
+    'android.injected.signing.key.password' => ENV['FL_ANDROID_KEY_PASSWORD']
   }
 
   build_number = ENV['FL_BUILD_NUMBER']
