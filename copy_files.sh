@@ -2,6 +2,7 @@
 
 script_path=$(realpath "$0")
 script_dir=$(dirname "$script_path")
+destination=${1:-'..'} # read first arg, default to '..' (previous dir)
 
 confirm() {
   while true; do
@@ -43,7 +44,6 @@ backup_existing_fastlane() {
 }
 
 cd "$script_dir" || exit
-destination='..'
 
 copy_file .ruby-version
 copy_file Gemfile
@@ -51,6 +51,6 @@ copy_file Gemfile.lock
 
 backup_existing_fastlane
 cp -r fastlane "${destination}/fastlane"
-cd - &> /dev/null || echo ":: Couldn't go back to previous dir" || exit
 
+cd - &> /dev/null || echo ":: Couldn't go back to previous dir" || exit
 echo ":: Finished! You can now remove this repository directory"
