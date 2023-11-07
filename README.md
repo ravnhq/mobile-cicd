@@ -106,11 +106,13 @@ still apply (for example, `FL_BUILD_NUMBER=store` and `FL_COMMIT_INCREMENT=true`
 As is, this pipeline process is simple, _build and publish_. If you need to add extra logic required by your project
 you can do it in a variety of ways:
 
-1. Modifying existing public lanes available in `fastlane/Fastfile` to add extra high-level steps, or add new lanes.
+1. Modifying existing public lanes available in `fastlane/Fastfile` to add extra high-level steps, or add new public
+   lanes.
 2. Modifying private lanes, note however that these usually contain more moving parts, if you're unsure on how or where
    to add your modifications contact one of the maintainers of this repository.
     - Common lanes are defined in the `fastlane/lanes/common.rb` file
     - iOS lanes are defined in the `fastlane/lanes/ios.rb` file
     - Android lanes are defined in the `fastlane/lanes/android.rb` file
-3. Adding new private lanes is the preferred way to organize your work, there should be only public lanes
-   on `fastlane/Fastfile`.
+3. Adding new private lanes (prefer to add them in the `lanes` directory as the `fastlane/Fastfile` file should only
+   contain public lanes)
+
