@@ -22,7 +22,7 @@ private_lane :build do |options|
   }
 
   build_number = ENV['FL_BUILD_NUMBER']
-  properties['fastlane.version.code'] = build_number if build_number
+  properties['version.code'] = build_number if build_number
 
   gradle(task:, build_type:, flavor:, project_dir:, properties:)
 end
