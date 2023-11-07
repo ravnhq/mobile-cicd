@@ -10,19 +10,7 @@ private_lane :build do |options|
   task = get_build_task(default: options[:default_artifact] || 'aab')
   build_type = ENV['FL_ANDROID_BUILD_TYPE'] || 'Release'
   flavor = ENV['FL_ANDROID_FLAVOR']
-
-  android_env_vars = %w[FL_ANDROID_STORE_FILE FL_ANDROID_STORE_PASSWORD FL_ANDROID_KEY_ALIAS FL_ANDROID_KEY_PASSWORD]
-  ensure_env_vars(env_vars: android_env_vars)
-
-  properties = {
-    'android.injected.signing.store.file' => ENV['FL_ANDROID_STORE_FILE'],
-    'android.injected.signing.store.password' => ENV['FL_ANDROID_STORE_PASSWORD'],
-    'android.injected.signing.key.alias' => ENV['FL_ANDROID_KEY_ALIAS'],
-    'android.injected.signing.key.password' => ENV['FL_ANDROID_KEY_PASSWORD']
-  }
-
-  build_number = ENV['FL_BUILD_NUMBER']
-  properties['version.code'] = build_number if build_number
+  properties = get_build_properties
 
   gradle(task:, build_type:, flavor:, project_dir:, properties:)
 end
@@ -63,6 +51,36 @@ private_lane :get_build_task do |options|
   else
     raise "Unreachable statement, artifact type: #{artifact} (fixme)"
   end
+end
+
+desc 'Get Android build properties'
+private_lane :get_build_properties do
+  skip_signing = parse_boolean(ENV['FL_ANDROID_SKIP_SIGNING'] || 'false')
+
+  android_env_vars = %w[FL_ANDROID_STORE_FILE FL_ANDROID_STORE_PASSWORD FL_ANDROID_KEY_ALIAS FL_ANDROID_KEY_PASSWORD]
+  ensure_env_vars(env_vars: android_env_vars) unless skip_signing
+
+  properties = {}
+
+  # Set signing variables optionally, let the build process fail if any of them is not set
+  store_file = ENV['FL_ANDROID_STORE_FILE']
+  properties['android.injected.signing.store.file'] = store_file if !skip_signing && store_file
+
+  store_password = ENV['FL_ANDROID_STORE_PASSWORD']
+  properties['android.injected.signing.store.password'] = store_password if !skip_signing && store_password
+
+  key_alias = ENV['FL_ANDROID_KEY_ALIAS']
+  properties['android.injected.signing.key.alias'] = key_alias if !skip_signing && key_alias
+
+  key_password = ENV['FL_ANDROID_KEY_PASSWORD']
+  properties['android.injected.signing.key.password'] = key_password if !skip_signing && key_password
+
+  # Overwrite version.code property if build number environment variable is a valid number
+  build_number = ENV['FL_BUILD_NUMBER']
+  is_build_number_valid = build_number && !Integer(build_number.strip, exception: false).nil?
+  properties['version.code'] = build_number if is_build_number_valid
+
+  properties
 end
 
 desc 'Commit version bump and push'
