@@ -1,9 +1,16 @@
 name: 'Fastlane Android'
 description: 'Execute fastlane pipeline for Android'
 inputs:
+  build-lane:
+    description: 'The build lane that should be executed (values: beta, release)'
+    required: true
   enforced-branch:
     description: 'Branch to enforce, recommended (supports regex)'
     required: false
+  run-id-as-build:
+    description: 'Whether or not to use GitHub build id as build number'
+    required: false
+    default: 'true'
   commit-increment:
     description: 'Whether or not to commit and push version increment'
     required: false
@@ -19,7 +26,7 @@ inputs:
     description: 'Google Credentials JSON contents in base64 to upload artifacts (required if publishing is enabled)'
     required: false
   artifact:
-    description: 'The type of the artifact that should be produced (values: apk, aab [default])'
+    description: 'The type of the artifact that should be produced (values: apk, aab)'
     required: false
     default: 'aab'
   flavor:
@@ -64,3 +71,22 @@ runs:
       run: |
         echo "${{ inputs.key-store-base64 }}" | base64 -d > __keystore.jks 
         echo "keystore-file=$(pwd)/__keystore.jks" >> $GITHUB_OUTPUT
+    - id: set-env-variables
+      shell: bash
+      run: ${{ github.action_path }}/fastlane.sh
+      env:
+        BUILD_LANE: ${{ inputs.build-lane }}
+        RUN_ID_AS_BUILD: ${{ inputs.run-id-as-build }}
+        RUN_ID: ${{ github.run_id }}
+        FL_ENFORCED_BRANCH: ${{ inputs.enforced-branch }}
+        FL_COMMIT_INCREMENT: ${{ inputs.commit-increment }}
+        FL_PACKAGE_NAME: ${{ inputs.package-name }}
+        FL_GOOGLE_JSON_FILE: ${{ steps.create-google-json-file.outputs.google-credentials-file }}
+        FL_ANDROID_ARTIFACT: ${{ inputs.artifact }}
+        FL_ANDROID_FLAVOR: ${{ inputs.flavor }}
+        FL_ANDROID_BUILD_TYPE: ${{ inputs.build-type }}
+        FL_ANDROID_SKIP_SIGNING: ${{ inputs.skip-signing }}
+        FL_ANDROID_STORE_FILE: ${{ steps.create-keystore-file.outputs.keystore-file }}
+        FL_ANDROID_STORE_PASSWORD: ${{ inputs.key-store-password }}
+        FL_ANDROID_KEY_ALIAS: ${{ inputs.key-alias }}
+        FL_ANDROID_KEY_PASSWORD: ${{ inputs.key-password }}
