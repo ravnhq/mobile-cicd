@@ -38,7 +38,7 @@ backup_existing_fastlane() {
       fi
     fi
 
-    cp "${destination}/fastlane" "${destination}/fastlane.old"
+    mv "${destination}/fastlane" "${destination}/fastlane.old"
     echo ":: Note: Remove fastlane.old after consolidating your configuration files"
   fi
 }
