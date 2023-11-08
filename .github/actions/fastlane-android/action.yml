@@ -79,7 +79,7 @@ runs:
       run: |
         echo "${{ inputs.key-store-base64 }}" | base64 -d > __keystore.jks 
         echo "keystore-file=$(pwd)/__keystore.jks" >> $GITHUB_OUTPUT
-    - id: set-env-variables
+    - id: run-fastlane
       shell: bash
       run: ${{ github.action_path }}/fastlane.sh
       env:
