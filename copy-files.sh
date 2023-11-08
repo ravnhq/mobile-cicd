@@ -38,19 +38,30 @@ backup_existing_fastlane() {
       fi
     fi
 
-    mv "${destination}/fastlane" "${destination}/fastlane.old"
+    cp "${destination}/fastlane" "${destination}/fastlane.old"
     echo ":: Note: Remove fastlane.old after consolidating your configuration files"
   fi
 }
 
-cd "$script_dir" || exit
-
-copy_file .ruby-version
-copy_file Gemfile
-copy_file Gemfile.lock
+# Copy Ruby files required by fastlane
+copy_ruby_files() {
+  copy_file .ruby-version
+  copy_file Gemfile
+  copy_file Gemfile.lock
+}
 
 backup_existing_fastlane
 cp -r fastlane "${destination}/fastlane"
+# Copy fastlane directory (backup any previous version)
+copy_fastlane() {
+  backup_existing_fastlane
+  cp -r fastlane "${destination}/fastlane"
+}
+
+cd "$script_dir" || exit
+
+copy_ruby_files
+copy_fastlane
 
 cd - &> /dev/null || echo ":: Couldn't go back to previous dir" || exit
 echo ":: Finished! You can now remove this repository directory"

@@ -22,8 +22,8 @@ Run the following commands to copy the configuration files contained in this rep
 ```shell
 cd <your-project-dir>
 git clone git@github.com:ravnhq/mobile-cicd.git
-chmod +x ./mobile-cicd/copy_files.sh # make it executable
-./mobile-cicd/copy_files.sh
+chmod +x ./mobile-cicd/copy-files.sh # make it executable (if needed)
+./mobile-cicd/copy-files.sh
 ```
 
 The script will copy the configuration files over the root directory of your project, checking if any of them already
