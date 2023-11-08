@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 script_path=$(realpath "$0")
-script_dir=$(dirname "$script_path")
+script_dir=$(dirname "${script_path}")
 destination=${1:-'..'} # read first arg, default to '..' (previous dir)
 
 confirm() {
@@ -50,18 +50,32 @@ copy_ruby_files() {
   copy_file Gemfile.lock
 }
 
-backup_existing_fastlane
-cp -r fastlane "${destination}/fastlane"
 # Copy fastlane directory (backup any previous version)
 copy_fastlane() {
   backup_existing_fastlane
   cp -r fastlane "${destination}/fastlane"
 }
 
+# Copy GitHub actions (with confirmation)
+copy_github_actions() {
+  android_action='.github/actions/fastlane-android'
+  if confirm ":: Copy GitHub actions for Android (${android_action})?"; then
+    [[ -d "${destination:?}/${android_action}" ]] && rm -rf "${destination:?}/${android_action}"
+    cp -r "${android_action}" "${destination:?}/${android_action}"
+  fi
+
+  ios_action='.github/actions/fastlane-ios'
+  if confirm ":: Copy GitHub actions for iOS (${ios_action})?"; then
+    [[ -d "${destination:?}/${ios_action}" ]] && rm -rf "${destination:?}/${ios_action}"
+    cp -r "${ios_action}" "${destination:?}/${ios_action}"
+  fi
+}
+
 cd "$script_dir" || exit
 
 copy_ruby_files
 copy_fastlane
+copy_github_actions
 
 cd - &> /dev/null || echo ":: Couldn't go back to previous dir" || exit
 echo ":: Finished! You can now remove this repository directory"
