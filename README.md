@@ -116,3 +116,11 @@ you can do it in a variety of ways:
 3. Adding new private lanes (prefer to add them in the `fastlane/lanes` directory as the `fastlane/Fastfile` file should
    only contain public lanes)
 
+# Running on CI
+
+## GitHub Actions
+
+- [fastlane-android](.github/actions/fastlane-android/README.md): Action to build and publish Android applications
+- [fastlane-ios](.github/actions/fastlane-ios/README.md): Action to build and publish iOS applications
+
+## CircleCI

@@ -29,7 +29,7 @@ clipboard:
 cat path/to/your/file.json | base64 | pbcopy
 ```
 
-#### Values
+#### Variables
 
 | Input                    | Description                                                                                          | Required | Default   |
 |--------------------------|------------------------------------------------------------------------------------------------------|:--------:|-----------|
