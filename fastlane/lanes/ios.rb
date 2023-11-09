@@ -50,7 +50,7 @@ private_lane :configure_signing do |options|
 
   bundle_identifier = CredentialsManager::AppfileConfig.try_fetch_value(:app_identifier)
   team_id = CredentialsManager::AppfileConfig.try_fetch_value(:team_id)
-  profiles = Actions.lane_context[SharedValues::SharedValues::MATCH_PROVISIONING_PROFILE_MAPPING]
+  profiles = Actions.lane_context[SharedValues::MATCH_PROVISIONING_PROFILE_MAPPING]
   profile_name = profiles[bundle_identifier]
 
   update_code_signing_settings(
