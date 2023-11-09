@@ -23,25 +23,49 @@ private_lane :build do |options|
   live = options[:env] == 'release'
   configuration = ENV['FL_IOS_CONFIGURATION']&.strip || 'Release'
 
-  provision_certificates(type:)
   update_build_number(type:, live:, xcodeproj:)
-  disable_automatic_signing(xcodeproj:, configuration:)
+  configure_certificates(type:)
+  configure_signing(xcodeproj:, configuration:)
 
   scheme = ENV['FL_IOS_SCHEME'].strip
   team_id = CredentialsManager::AppfileConfig.try_fetch_value(:team_id)
-  # use only workspace if available (avoid conflict)
-  project = xcworkspace ? nil : xcodeproj
-  gym(scheme:, configuration:, workspace: xcworkspace, project:, export_team_id: team_id)
+
+  gym(
+    workspace: xcworkspace,
+    project: xcworkspace ? nil : xcodeproj,
+    scheme:,
+    configuration:,
+    export_team_id: team_id,
+    export_method: Actions.lane_context[SharedValues::SIGH_PROFILE_TYPE],
+    export_options: {
+      signingStyle: 'manual'
+    }
+  )
 end
 
-desc 'Disable automatic code signing'
-private_lane :disable_automatic_signing do |options|
+desc 'Configure iOS code signing'
+private_lane :configure_signing do |options|
   build_configurations = [options[:configuration]]
-  update_code_signing_settings(use_automatic_signing: false, path: options[:xcodeproj], build_configurations:)
+  path = options[:xcodeproj]
+
+  bundle_identifier = CredentialsManager::AppfileConfig.try_fetch_value(:app_identifier)
+  team_id = CredentialsManager::AppfileConfig.try_fetch_value(:team_id)
+  profiles = Actions.lane_context[SharedValues::SharedValues::MATCH_PROVISIONING_PROFILE_MAPPING]
+  profile_name = profiles[bundle_identifier]
+
+  update_code_signing_settings(
+    use_automatic_signing: false,
+    bundle_identifier:,
+    path:,
+    profile_name:,
+    team_id:,
+    build_configurations:,
+    code_sign_identity: 'iOS Distribution' # fixme?: May need to change for other types of builds
+  )
 end
 
 desc 'Fetch certificates and provisioning profiles'
-private_lane :provision_certificates do |options|
+private_lane :configure_certificates do |options|
   identifier = CredentialsManager::AppfileConfig.try_fetch_value(:app_identifier)
   match(app_identifier: identifier, type: options[:type], readonly: is_ci)
 end
