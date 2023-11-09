@@ -60,7 +60,7 @@ platform :ios do
     UI.message('Skipping upload to TestFlight (FL_APPLE_ENTERPRISE is true)') if is_enterprise
 
     publish = parse_boolean(ENV['FL_PUBLISH_BUILD'] || 'true')
-    upload_to_testflight if publish && !is_enterprise
+    upload_to_testflight(skip_waiting_for_build_processing: is_ci) if publish && !is_enterprise
 
     commit_increment = parse_boolean(ENV['FL_COMMIT_INCREMENT'] || 'false')
     commit_and_push if commit_increment
