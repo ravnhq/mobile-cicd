@@ -31,9 +31,10 @@ private_lane :build do |options|
 
   scheme = ENV['FL_IOS_SCHEME'].strip
   configuration = ENV['FL_IOS_CONFIGURATION']&.strip || 'Release'
+  team_id = CredentialsManager::AppfileConfig.try_fetch_value(:team_id)
   # use only workspace if available (avoid conflict)
   project = xcworkspace ? nil : xcodeproj
-  gym(scheme:, configuration:, workspace: xcworkspace, project:)
+  gym(scheme:, configuration:, workspace: xcworkspace, project:, export_team_id: team_id)
 end
 
 desc 'Find main iOS XCode Workspace'
