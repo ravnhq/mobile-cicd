@@ -4,7 +4,7 @@ desc 'Setup Apple App Store Connect authorization'
 private_lane :authenticate do
   ensure_env_vars(env_vars: %w[FL_APPLE_KEY_ID FL_APPLE_KEY_FILE FL_APPLE_ISSUER_ID])
   app_store_connect_api_key(
-    key_file_path: ENV['FL_APPLE_KEY_FILE']&.strip,
+    key_filepath: ENV['FL_APPLE_KEY_FILE']&.strip,
     key_id: ENV['FL_APPLE_KEY_ID']&.strip,
     issuer_id: ENV['FL_APPLE_ISSUER_ID']&.strip,
     duration: 1200,
