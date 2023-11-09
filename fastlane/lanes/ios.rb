@@ -60,7 +60,7 @@ private_lane :configure_signing do |options|
     profile_name:,
     team_id:,
     build_configurations:,
-    code_sign_identity: 'iOS Distribution' # fixme?: May need to change for other types of builds
+    code_sign_identity: 'iPhone Distribution' # fixme?: May need to change for other types of builds
   )
 end
 
