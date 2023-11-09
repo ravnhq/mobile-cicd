@@ -36,8 +36,8 @@ inputs:
     required: false
     default: 'Release'
   xcodeproj:
-    description: 'Path to main XCode project (required if not found automatically)'
-    required: false
+    description: 'Path to main XCode project'
+    required: true
   xcworkspace:
     description: 'Path to main XCode workspace'
     required: false
