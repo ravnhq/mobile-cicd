@@ -25,12 +25,13 @@ private_lane :build do |options|
 
   type = options[:type]
   live = options[:env] == 'release'
+  configuration = ENV['FL_IOS_CONFIGURATION']&.strip || 'Release'
 
   provision_certificates(type:)
   update_build_number(type:, live:, xcodeproj:)
+  disable_automatic_signing(xcodeproj:, configuration:)
 
   scheme = ENV['FL_IOS_SCHEME'].strip
-  configuration = ENV['FL_IOS_CONFIGURATION']&.strip || 'Release'
   team_id = CredentialsManager::AppfileConfig.try_fetch_value(:team_id)
   # use only workspace if available (avoid conflict)
   project = xcworkspace ? nil : xcodeproj
@@ -49,6 +50,12 @@ private_lane :find_xcode_project do
   projects_glob = is_react_native || is_flutter || is_expo ? './ios/*.xcodeproj' : './*.xcodeproj'
   projects = Dir.glob(projects_glob)
   projects.length == 1 ? projects.first : nil
+end
+
+desc 'Disable automatic code signing'
+private_lane :disable_automatic_signing do |options|
+  build_configurations = [options[:configuration]]
+  update_code_signing_settings(use_automatic_signing: false, path: options[:xcodeproj], build_configurations:)
 end
 
 desc 'Fetch certificates and provisioning profiles'
