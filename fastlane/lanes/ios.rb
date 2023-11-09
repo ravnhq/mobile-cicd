@@ -24,6 +24,7 @@ private_lane :build do |options|
   configuration = ENV['FL_IOS_CONFIGURATION']&.strip || 'Release'
 
   update_build_number(type:, live:, xcodeproj:)
+  setup_expo_project if is_expo
   configure_certificates(type:)
   configure_signing(xcodeproj:, configuration:)
 
@@ -83,7 +84,6 @@ private_lane :update_build_number do |options|
 
   if is_expo
     increment_expo_version(ios_build_number: build_number, platform: 'ios')
-    setup_expo_project # regenerate native projects with updated versions
   else
     increment_build_number(build_number:, xcodeproj: options[:xcodeproj])
   end
