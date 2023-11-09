@@ -14,6 +14,7 @@ end
 
 desc 'Build iOS project'
 private_lane :build do |options|
+  ensure_env_vars(env_vars: %w[FL_IOS_SCHEME])
   setup_expo_project if is_expo # needs to be done before searching
 
   xcworkspace = ENV['FL_XCODE_WORKSPACE'] || find_xcode_workspace
@@ -28,10 +29,11 @@ private_lane :build do |options|
   provision_certificates(type:)
   update_build_number(type:, live:, xcodeproj:)
 
-  scheme = ENV['FL_IOS_SCHEME']&.strip || 'Release'
+  scheme = ENV['FL_IOS_SCHEME'].strip
+  configuration = ENV['FL_IOS_CONFIGURATION']&.strip || 'Release'
   # use only workspace if available (avoid conflict)
   project = xcworkspace ? nil : xcodeproj
-  gym(scheme:, workspace: xcworkspace, project:)
+  gym(scheme:, configuration:, workspace: xcworkspace, project:)
 end
 
 desc 'Find main iOS XCode Workspace'

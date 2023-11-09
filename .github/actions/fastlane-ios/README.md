@@ -38,7 +38,8 @@ cat path/to/your/file.json | base64 | pbcopy
 | `app-identifier`   | App Store application bundle identifier                                    |    ✓     |           |
 | `team-id`          | App Store Connect Team ID (if any)                                         |          |           |
 | `itc-team-id`      | iTunes Connect Team ID (if any)                                            |          |           |
-| `scheme`           | iOS project scheme to build                                                |          | `Release` |
+| `scheme`           | iOS project scheme to build                                                |    ✓     |           |
+| `configuration`    | iOS project configuration to use                                           |          | `Release` |
 | `xcodeproj`        | Path to main XCode project (required if not found automatically)           |    *     |           |
 | `xcworkspace`      | Path to main XCode workspace                                               |          |           |
 | `apple-key-id`     | Apple App Store Connect Key ID                                             |    ✓     |           |

@@ -30,6 +30,9 @@ inputs:
     required: false
   scheme:
     description: 'iOS project scheme to build'
+    required: true
+  configuration:
+    description: 'iOS project configuration to use'
     required: false
     default: 'Release'
   xcodeproj:
@@ -82,6 +85,7 @@ runs:
         FL_TEAM_ID: ${{ inputs.team-id }}
         FL_ITC_TEAM_ID: ${{ inputs.itc-team-id }}
         FL_IOS_SCHEME: ${{ inputs.scheme }}
+        FL_IOS_CONFIGURATION: ${{ inputs.configuration }}
         FL_XCODE_PROJ: ${{ inputs.xcodeproj }}
         FL_XCODE_WORKSPACE: ${{ inputs.xcworkspace }}
         FL_APPLE_KEY_ID: ${{ inputs.apple-key-id }}
