@@ -44,6 +44,30 @@ private_lane :build do |options|
   )
 end
 
+desc 'Increment build number'
+private_lane :update_build_number do |options|
+  build_number_env = ENV['FL_BUILD_NUMBER']&.downcase&.strip
+
+  build_number = nil
+  if options[:type] == 'appstore' && build_number_env == 'store'
+    build_number = app_store_build_number(live: options[:live]) + 1
+  else
+    build_number = Integer(build_number_env, exception: false) unless build_number_env.nil?
+  end
+
+  if is_expo
+    increment_expo_version(ios_build_number: build_number, platform: 'ios')
+  else
+    increment_build_number(build_number:, xcodeproj: options[:xcodeproj])
+  end
+end
+
+desc 'Fetch certificates and provisioning profiles'
+private_lane :configure_certificates do |options|
+  identifier = CredentialsManager::AppfileConfig.try_fetch_value(:app_identifier)
+  match(app_identifier: identifier, type: options[:type], readonly: is_ci)
+end
+
 desc 'Configure iOS code signing'
 private_lane :configure_signing do |options|
   build_configurations = [options[:configuration]]
@@ -63,30 +87,6 @@ private_lane :configure_signing do |options|
     build_configurations:,
     code_sign_identity: 'iPhone Distribution' # fixme?: May need to change for other types of builds
   )
-end
-
-desc 'Fetch certificates and provisioning profiles'
-private_lane :configure_certificates do |options|
-  identifier = CredentialsManager::AppfileConfig.try_fetch_value(:app_identifier)
-  match(app_identifier: identifier, type: options[:type], readonly: is_ci)
-end
-
-desc 'Increment build number'
-private_lane :update_build_number do |options|
-  build_number_env = ENV['FL_BUILD_NUMBER']&.downcase&.strip
-
-  build_number = nil
-  if options[:type] == 'appstore' && build_number_env == 'store'
-    build_number = app_store_build_number(live: options[:live]) + 1
-  else
-    build_number = Integer(build_number_env, exception: false) unless build_number_env.nil?
-  end
-
-  if is_expo
-    increment_expo_version(ios_build_number: build_number, platform: 'ios')
-  else
-    increment_build_number(build_number:, xcodeproj: options[:xcodeproj])
-  end
 end
 
 desc 'Commit version bump and push'
