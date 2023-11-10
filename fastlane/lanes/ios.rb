@@ -24,7 +24,7 @@ private_lane :build do |options|
   configuration = ENV['FL_IOS_CONFIGURATION']&.strip || 'Release'
 
   update_build_number(type:, live:, xcodeproj:)
-  setup_expo_project if is_expo
+  setup_expo_project(platform: ios) if is_expo
   configure_certificates(type:)
   configure_signing(xcodeproj:, configuration:)
 

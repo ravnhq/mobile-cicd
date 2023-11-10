@@ -5,6 +5,7 @@ private_lane :build do |options|
   project_dir = is_react_native || is_flutter || is_expo ? 'android/' : './'
 
   update_build_number(track: options[:track], project_dir:)
+  setup_expo_project(platform: 'android') if is_expo
   gradle(task: 'clean', project_dir:)
 
   task = get_build_task(default: options[:default_artifact] || 'aab')
@@ -28,7 +29,6 @@ private_lane :update_build_number do |options|
 
   if is_expo
     increment_expo_version(android_version_code: build_number, platform: 'android')
-    setup_expo_project # regenerate native projects with updated versions
   else
     increment_version_code(version_code: build_number, project_dir: options[:project_dir])
   end
