@@ -91,8 +91,8 @@ copy_github_actions() {
 cd "${script_dir}" || exit
 
 copy_ruby_files
-copy_fastlane
-copy_github_actions
+confirm ":: Copy fastlane files?" && copy_fastlane
+confirm ":: Copy GitHub actions?" && copy_github_actions
 
 cd - &> /dev/null || echo ":: Couldn't go back to previous dir" || exit
 echo ":: Finished! You can now remove this repository directory"
