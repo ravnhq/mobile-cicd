@@ -6,10 +6,19 @@ destination=${1:-'..'} # read first arg, default to '..' (previous dir)
 
 confirm() {
   local prompt="$1"
-  read -rp "${prompt} (y/N): " yn
+  local default=${2:-N}
+  local values
 
-  yn=${yn,,}
-  case "$yn" in
+  if [[ "${default}" = 'Y' ]]; then
+    values='(Y/n)'
+  else
+    values='(y/N)'
+  fi
+
+  read -rp "${prompt} ${values}: " yn
+
+  yn=${yn:-$default}
+  case "${yn,,}" in
     y|yes)
       return 0
       ;;
@@ -49,7 +58,7 @@ backup_existing_fastlane() {
   if [[ -d "${destination}/fastlane" ]]; then
     echo ":: Copying existing fastlane/ directory to fastlane.old/"
     if [[ -d "${destination}/fastlane.old" ]]; then
-      if confirm ":: Directory fastlane.old/ already exists, remove it?"; then
+      if confirm ":: Directory fastlane.old/ already exists, remove it?" 'Y'; then
         echo ":: Removing existing fastlane.old directory"
         rm -rf "${destination}/fastlane.old"
       else
@@ -59,6 +68,47 @@ backup_existing_fastlane() {
 
     cp -r "${destination}/fastlane" "${destination}/fastlane.old"
     echo ":: Note: Remove fastlane.old after consolidating your configuration files"
+  fi
+}
+
+remove_region() {
+    local start_marker="# region $1"
+    local end_marker="# endregion $1"
+    local file="$2"
+
+    perl -i -ne "print unless /${start_marker}/../${end_marker}/" "${file}"
+}
+
+remove_platform_code() {
+   local platform="$1"
+   local platform_to_remove
+
+   case "${platform}" in
+     android)
+       platform_to_remove='ios'
+       ;;
+     ios)
+       platform_to_remove='android'
+       ;;
+     *)
+       return 0
+       ;;
+   esac
+
+   rm "${destination:?}/fastlane/lanes/${platform_to_remove}.rb"
+   remove_region "${platform_to_remove}" "${destination}/fastlane/Appfile"
+   remove_region "${platform_to_remove}" "${destination}/fastlane/Fastfile"
+}
+
+configure_cocoapods() {
+  local platform="$1"
+
+  if ! [[ "${platform}" =~ (ios|all) ]]; then
+    return
+  fi
+
+  if ! confirm ":: Does your iOS project use CocoaPods? (most multiplatform projects do)"; then
+    perl -i -ne "print unless /gem\s+'cocoapods'/" "${destination}/Gemfile"
   fi
 }
 
@@ -86,8 +136,20 @@ copy_ruby_files() {
 
 # Copy fastlane directory (backup any previous version)
 copy_fastlane() {
+  local platform="$1"
+
   backup_existing_fastlane
   copy_recursively fastlane "${destination}/fastlane"
+}
+
+# Configure platform code and configurations
+configure_platforms() {
+  remove_platform_code "$1"
+  configure_cocoapods "$1"
+}
+
+exec_bundle_install() {
+  bundle install
 }
 
 # Copy GitHub actions (with confirmation)
@@ -95,14 +157,14 @@ copy_github_actions() {
   local platform="$1"
 
   android_action='.github/actions/fastlane-android'
-  if [[ "${platform}" =~ (android|all) ]] && confirm ":: Copy GitHub actions for Android (${android_action})?"; then
+  if [[ "${platform}" =~ (android|all) ]] && confirm ":: Copy GitHub actions for Android (${android_action})?" 'Y'; then
     [[ -d "${destination:?}/${android_action}" ]] && rm -rf "${destination:?}/${android_action}"
     mkdir -p "${destination:?}/.github/actions"
     cp -r "${android_action}" "${destination:?}/${android_action}"
   fi
 
   ios_action='.github/actions/fastlane-ios'
-  if [[ "${platform}" =~ (ios|all) ]] && confirm ":: Copy GitHub actions for iOS (${ios_action})?"; then
+  if [[ "${platform}" =~ (ios|all) ]] && confirm ":: Copy GitHub actions for iOS (${ios_action})?" 'Y'; then
     [[ -d "${destination:?}/${ios_action}" ]] && rm -rf "${destination:?}/${ios_action}"
     mkdir -p "${destination:?}/.github/actions"
     cp -r "${ios_action}" "${destination:?}/${ios_action}"
@@ -111,12 +173,13 @@ copy_github_actions() {
 
 cd "${script_dir}" || exit
 
-copy_ruby_files
-
 platform=$(question ":: Platform to copy" "android, ios, all" "all")
 
-confirm ":: Copy fastlane files?" && copy_fastlane
+copy_ruby_files
+confirm ":: Copy fastlane files?" 'Y' && copy_fastlane "${platform}"
+configure_platforms "${platform}"
 copy_github_actions "${platform}"
+confirm ":: Execute 'bundle install' to install gems?" 'Y' && exec_bundle_install
 
 cd - &> /dev/null || echo ":: Couldn't go back to previous dir" || exit
 echo ":: Finished! You can now remove this repository directory"

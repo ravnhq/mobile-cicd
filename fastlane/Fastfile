@@ -22,6 +22,7 @@ before_all do |_, _|
   # List of all available actions: https://docs.fastlane.tools/actions
 end
 
+# region android
 platform :android do
   import './lanes/android.rb'
 
@@ -47,7 +48,9 @@ platform :android do
     commit_and_push if commit_increment
   end
 end
+# endregion android
 
+# region ios
 platform :ios do
   import './lanes/ios.rb'
 
@@ -81,3 +84,4 @@ platform :ios do
     commit_and_push if commit_increment
   end
 end
+# endregion ios
