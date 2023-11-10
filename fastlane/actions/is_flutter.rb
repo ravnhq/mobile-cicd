@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Fastlane
   module Actions
     module SharedValues
@@ -12,7 +14,7 @@ module Fastlane
 
         pubspec_content = read_pubspec_yaml
         is_flutter = pubspec_content&.dig('dependencies')&.dig('flutter')&.dig('sdk') == 'flutter'
-        return Action.lane_context[SharedValues::IS_FLUTTER_PROJECT] = is_flutter
+        Action.lane_context[SharedValues::IS_FLUTTER_PROJECT] = is_flutter
       end
 
       def self.read_pubspec_yaml

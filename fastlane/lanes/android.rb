@@ -19,13 +19,11 @@ end
 desc 'Increment build number'
 private_lane :update_build_number do |options|
   build_number_env = ENV['FL_BUILD_NUMBER']&.downcase&.strip
-
-  build_number = nil
-  if %w[beta production].include?(options[:track]) && build_number_env == 'store'
-    build_number = google_play_track_version_codes(track: options[:track]) + 1
-  else
-    build_number = Integer(build_number_env, exception: false) unless build_number_env.nil?
-  end
+  build_number = if %w[beta production].include?(options[:track]) && build_number_env == 'store'
+                   google_play_track_version_codes(track: options[:track]) + 1
+                 elsif build_number_env
+                   Integer(build_number_env, exception: false)
+                 end
 
   if is_expo
     increment_expo_version(android_version_code: build_number, platform: 'android')

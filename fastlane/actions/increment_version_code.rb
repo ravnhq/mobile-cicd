@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Fastlane
   module Actions
     module SharedValues
@@ -13,16 +15,15 @@ module Fastlane
         properties_contents = File.read(properties_file)
 
         version_code = params[:version_code]
-        version_code = get_version_code(properties_contents) if version_code.nil?
+        version_code ||= get_version_code(properties_contents)
         version_code = [version_code.to_i, 1].max
 
         updated_contents = properties_contents.gsub!(/^\s*version\.code\s*=\s*\S+/, "version.code=#{version_code}")
-        updated_contents = properties_contents + "\nversion.code=#{version_code}" if updated_contents.nil?
+        updated_contents ||= properties_contents + "\nversion.code=#{version_code}"
 
         File.write(properties_file, updated_contents)
 
         Actions.lane_context[SharedValues::INCREMENT_VERSION_CODE_VALUE] = version_code
-        version_code
       end
 
       def self.get_version_code(contents)
@@ -53,7 +54,7 @@ module Fastlane
                                        env_name: 'FL_INCREMENT_VERSION_CODE_PROJECT_DIR',
                                        description: 'Android project dir',
                                        is_string: true,
-                                       default_value: '.'),
+                                       default_value: '.')
         ]
       end
 

@@ -2,7 +2,6 @@
 
 module Fastlane
   module Actions
-
     # Action to setup an expo project (if any)
     class SetupExpoProjectAction < Action
       def self.run(params)

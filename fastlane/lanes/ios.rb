@@ -48,13 +48,11 @@ end
 desc 'Increment build number'
 private_lane :update_build_number do |options|
   build_number_env = ENV['FL_BUILD_NUMBER']&.downcase&.strip
-
-  build_number = nil
-  if options[:type] == 'appstore' && build_number_env == 'store'
-    build_number = app_store_build_number(live: options[:live]) + 1
-  else
-    build_number = Integer(build_number_env, exception: false) unless build_number_env.nil?
-  end
+  build_number = if options[:type] == 'appstore' && build_number_env == 'store'
+                   app_store_build_number(live: options[:live]) + 1
+                 elsif build_number_env
+                   Integer(build_number_env, exception: false)
+                 end
 
   if is_expo
     increment_expo_version(ios_build_number: build_number, platform: 'ios')
@@ -68,7 +66,7 @@ private_lane :install_cocoapods do |options|
   xcodeproj = options[:xcodeproj]
 
   podfile = ENV['FL_IOS_PODFILE']&.strip
-  podfile = File.dirname(xcodeproj) unless podfile
+  podfile ||= File.dirname(xcodeproj)
 
   cocoapods(clean_install: is_ci, podfile:)
 end

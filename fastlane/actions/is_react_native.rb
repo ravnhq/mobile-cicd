@@ -14,7 +14,7 @@ module Fastlane
 
         package_contents = read_package_json
         is_react_native = package_contents&.dig('dependencies')&.dig('react-native') ? true : false
-        return Action.lane_context[SharedValues::IS_REACT_NATIVE_PROJECT] = is_react_native
+        Action.lane_context[SharedValues::IS_REACT_NATIVE_PROJECT] = is_react_native
       end
 
       def self.read_package_json

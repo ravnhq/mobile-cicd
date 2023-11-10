@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Fastlane
   module Actions
     module SharedValues
@@ -11,7 +13,7 @@ module Fastlane
 
         package_contents = read_package_json
         is_expo = package_contents&.dig('dependencies')&.dig('expo') ? true : false
-        return Action.lane_context[SharedValues::IS_EXPO_PROJECT] = is_expo
+        Action.lane_context[SharedValues::IS_EXPO_PROJECT] = is_expo
       end
 
       def self.read_package_json
