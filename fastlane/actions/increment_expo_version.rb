@@ -13,7 +13,6 @@ module Fastlane
 
     # Action to increment version of Expo projects (in app.json)
     class IncrementExpoVersionAction < Action
-
       def self.run(params)
         platform = params[:platform]
         increment_android_version_code(params[:android_version_code]) if %w[android both].include?(platform)
@@ -44,7 +43,7 @@ module Fastlane
 
       def self.read_app_json_config
         JSON.parse(File.read('app.json'))
-      rescue
+      rescue StandardError
         {}
       end
 
@@ -78,7 +77,8 @@ module Fastlane
                                        type: String,
                                        default_value: 'both',
                                        verify_block: proc do |value|
-                                         UI.user_error!("Invalid platform value '#{value}'") unless %w[android ios both].include?(value)
+                                         is_valid = %w[android ios both].include?(value)
+                                         UI.user_error!("Invalid platform value '#{value}'") unless is_valid
                                        end)
         ]
       end
