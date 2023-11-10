@@ -25,6 +25,7 @@ private_lane :build do |options|
 
   update_build_number(type:, live:, xcodeproj:)
   setup_expo_project(platform: 'ios') if is_expo
+  install_cocoapods unless is_expo
   configure_certificates(type:)
   configure_signing(xcodeproj:, configuration:)
 
@@ -60,6 +61,16 @@ private_lane :update_build_number do |options|
   else
     increment_build_number(build_number:, xcodeproj: options[:xcodeproj])
   end
+end
+
+desc 'Install Cocoapods if needed'
+private_lane :install_cocoapods do |options|
+  xcodeproj = options[:xcodeproj]
+
+  podfile = ENV['FL_IOS_PODFILE']&.strip
+  podfile = File.dirname(xcodeproj) unless podfile
+
+  cocoapods(clean_install: is_ci, podfile:)
 end
 
 desc 'Fetch certificates and provisioning profiles'
