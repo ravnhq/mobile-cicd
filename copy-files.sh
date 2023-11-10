@@ -28,7 +28,7 @@ copy_file() {
 
 backup_existing_fastlane() {
   if [[ -d "${destination}/fastlane" ]]; then
-    echo ":: Renaming existing fastlane/ directory to fastlane.old/"
+    echo ":: Copying existing fastlane/ directory to fastlane.old/"
     if [[ -d "${destination}/fastlane.old" ]]; then
       if confirm ":: Directory fastlane.old/ already exists, remove it?"; then
         echo ":: Removing existing fastlane.old directory"
@@ -38,9 +38,24 @@ backup_existing_fastlane() {
       fi
     fi
 
-    mv "${destination}/fastlane" "${destination}/fastlane.old"
+    cp -r "${destination}/fastlane" "${destination}/fastlane.old"
     echo ":: Note: Remove fastlane.old after consolidating your configuration files"
   fi
+}
+
+copy_recursively() {
+    local src_dir="$1"
+    local dst_dir="$2"
+
+    [[ -z "${src_dir}" || -z "${dst_dir}" ]] && return 1
+
+    mkdir -p "${dst_dir}"
+
+    find "${src_dir}" -type f | while read -r src_file; do
+        local dst_file="${dst_dir}/${src_file#$src_dir/}"
+        mkdir -p "$(dirname "${dst_file}")"
+        cp "${src_file}" "${dst_file}"
+    done
 }
 
 # Copy Ruby files required by fastlane
@@ -53,7 +68,7 @@ copy_ruby_files() {
 # Copy fastlane directory (backup any previous version)
 copy_fastlane() {
   backup_existing_fastlane
-  cp -r fastlane "${destination}/fastlane"
+  copy_recursively fastlane "${destination}/fastlane"
 }
 
 # Copy GitHub actions (with confirmation)
@@ -61,17 +76,19 @@ copy_github_actions() {
   android_action='.github/actions/fastlane-android'
   if confirm ":: Copy GitHub actions for Android (${android_action})?"; then
     [[ -d "${destination:?}/${android_action}" ]] && rm -rf "${destination:?}/${android_action}"
+    mkdir -p "${destination:?}/.github/actions"
     cp -r "${android_action}" "${destination:?}/${android_action}"
   fi
 
   ios_action='.github/actions/fastlane-ios'
   if confirm ":: Copy GitHub actions for iOS (${ios_action})?"; then
     [[ -d "${destination:?}/${ios_action}" ]] && rm -rf "${destination:?}/${ios_action}"
+    mkdir -p "${destination:?}/.github/actions"
     cp -r "${ios_action}" "${destination:?}/${ios_action}"
   fi
 }
 
-cd "$script_dir" || exit
+cd "${script_dir}" || exit
 
 copy_ruby_files
 copy_fastlane
