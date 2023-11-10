@@ -5,19 +5,17 @@ script_dir=$(dirname "${script_path}")
 destination=${1:-'..'} # read first arg, default to '..' (previous dir)
 
 confirm() {
-  while true; do
-    read -rp "$1 (y/N): " yn
+  read -rp "$1 (y/N): " yn
 
-    yn=${yn,,}
-    case "$yn" in
-      y|yes)
-        return 0
-        ;;
-      *)
-        return 1
-        ;;
-    esac
-  done
+  yn=${yn,,}
+  case "$yn" in
+    y|yes)
+      return 0
+      ;;
+    *)
+      return 1
+      ;;
+  esac
 }
 
 copy_file() {
