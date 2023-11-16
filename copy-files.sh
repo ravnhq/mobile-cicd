@@ -18,7 +18,8 @@ confirm() {
   read -rp "${prompt} ${values}: " yn
 
   yn=${yn:-$default}
-  case "${yn,,}" in
+  yn=$(echo "$yn" | awk '{print tolower($0)}')
+  case "${yn}" in
     y|yes)
       return 0
       ;;
