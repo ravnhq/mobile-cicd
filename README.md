@@ -1,4 +1,4 @@
-# RAVN Mobile CI/CD
+# RAVN Mobile CI/CD – 🚧 🚧 🚧 Work in Progress 🚧 🚧 🚧
 
 #### Framework support:
 
@@ -15,6 +15,16 @@
 - [x] iOS TestFlight
 - [x] iOS App Store
 
+# Android Project Requirements
+
+There's multiple ways to install fastlane. The preferred method is with Bundler and this would be done automatically when you follow the instructions on [Setup (copy files over)](#setup-copy-files-over) so you don't need to worry about this. However, in order to install Bundler, it is needed to install Ruby first. If you use macOS, system Ruby is not recommended. See more [here](https://docs.fastlane.tools/getting-started/android/setup/#setting-up-supply). You should instead install Ruby with Homebrew or use a version manager such as asdf, chruby, rbenv, or rvm.
+
+To learn more about the variety of ways to install Ruby without having to modify your system environment follow [this link](https://www.ruby-lang.org/en/documentation/installation/#managers). 
+
+Follow [this guide](https://mac.install.guide/ruby/12.html) to install Ruby with Chruby.
+
+Once you are done installing Ruby, follow the instructions on [Setup (copy files over)](#setup-copy-files-over).
+
 # Setup (copy files over)
 
 Run the following commands to copy the configuration files contained in this repository into your own project:
@@ -22,7 +32,7 @@ Run the following commands to copy the configuration files contained in this rep
 ```shell
 cd <your-project-dir>
 git clone git@github.com:ravnhq/mobile-cicd.git
-./mobile-cicd/copy-files.sh
+./mobile-cicd/copy-files.sh && rm -rf mobile-cicd
 ```
 
 The script will copy the configuration files over the root directory of your project, checking if any of them already

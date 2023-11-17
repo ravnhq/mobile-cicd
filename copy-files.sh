@@ -149,6 +149,14 @@ configure_platforms() {
   configure_cocoapods "$1"
 }
 
+# Install Bundler and update gem dependencies
+install_and_configure_bundler() {
+  echo "Installing Bundler..."
+  gem install bundler
+  echo "Updating gem dependencies..."
+  bundle update
+}
+
 exec_bundle_install() {
   bundle install
 }
@@ -176,6 +184,7 @@ cd "${script_dir}" || exit
 
 platform=$(question ":: Platform to copy" "android, ios, all" "all")
 
+install_and_configure_bundler
 copy_ruby_files
 confirm ":: Copy fastlane files?" 'Y' && copy_fastlane "${platform}"
 configure_platforms "${platform}"
