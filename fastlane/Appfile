@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
-import './util/util.rb'
+def blank?(obj)
+  return obj.strip.empty? if obj.is_a?(String)
+
+  obj.respond_to?(:empty?) ? obj.empty? : !obj
+end
 
 # region ios
 identifier = ENV['FL_APP_IDENTIFIER']
