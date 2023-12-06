@@ -15,7 +15,7 @@
 - [x] iOS TestFlight
 - [x] iOS App Store
 
-# Setup (copy files over)
+# Setup
 
 Run the following commands to copy the configuration files contained in this repository into your own project:
 
@@ -28,6 +28,32 @@ git clone git@github.com:ravnhq/mobile-cicd.git
 The script will copy the configuration files over the root directory of your project, checking if any of them already
 exist and asking for your confirmation before replacing any of them. If a `fastlane` directory is already present, the
 script will rename it to `fastlane.old`.
+
+### Running locally
+
+> **Prerequisite:** Install Ruby latest version on your system, preferably
+> using [`rbenv`](https://github.com/rbenv/rbenv) to avoid messing up the default system installation.
+
+> **Note:** Check other sections for configuration and then come back to this section to run locally.
+
+To run locally you can either use `bundle exec` (preferred) or `fastlane` if installed, for example, to run with
+`bundle exec` you can do:
+
+```shell
+bundle exec fastlane android beta
+```
+
+Here are the following available platforms and lanes:
+
+#### Android
+
+- `bundle exec fastlane android beta`
+- `bundle exec fastlane android release`
+
+#### iOS
+
+- `bundle exec fastlane ios beta`
+- `bundle exec fastlane ios release`
 
 # Authentication
 
