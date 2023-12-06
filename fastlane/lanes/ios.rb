@@ -21,7 +21,9 @@ private_lane :build do |options|
 
   type = options[:type]
   live = options[:env] == 'release'
+
   configuration = ENV['FL_IOS_CONFIGURATION']&.strip || 'Release'
+  configuration = 'Release' if blank?(configuration)
 
   update_build_number(type:, live:, xcodeproj:)
   setup_expo_project(platform: 'ios') if is_expo
@@ -33,8 +35,8 @@ private_lane :build do |options|
   team_id = CredentialsManager::AppfileConfig.try_fetch_value(:team_id)
 
   gym(
-    workspace: xcworkspace,
-    project: xcworkspace ? nil : xcodeproj,
+    workspace: blank?(xcworkspace) ? nil : xcworkspace,
+    project: blank?(xcworkspace) ? xcodeproj : nil,
     scheme:,
     configuration:,
     export_team_id: team_id,
@@ -66,7 +68,7 @@ private_lane :install_cocoapods do |options|
   xcodeproj = options[:xcodeproj]
 
   podfile = ENV['FL_IOS_PODFILE']&.strip
-  podfile ||= File.dirname(xcodeproj)
+  podfile = File.dirname(xcodeproj) if blank?(podfile)
 
   cocoapods(clean_install: is_ci, podfile:)
 end

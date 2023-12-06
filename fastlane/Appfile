@@ -1,20 +1,22 @@
 # frozen_string_literal: true
 
+import './util/util.rb'
+
 # region ios
 identifier = ENV['FL_APP_IDENTIFIER']
-app_identifier(identifier) if identifier
+app_identifier(identifier) unless blank?(identifier)
 
 env_team_id = ENV['FL_TEAM_ID']
-team_id(env_team_id) if env_team_id
+team_id(env_team_id) unless blank?(env_team_id)
 
 env_itc_team_id = ENV['FL_ITC_TEAM_ID']
-itc_team_id(env_itc_team_id) if env_itc_team_id
+itc_team_id(env_itc_team_id) unless blank?(env_itc_team_id)
 # endregion ios
 
 # region android
 android_name = ENV['FL_PACKAGE_NAME']
-package_name(android_name) if android_name
+package_name(android_name) unless blank?(android_name)
 
 json_file = ENV['FL_GOOGLE_JSON_FILE']
-json_key_file(json_file) if json_file
+json_key_file(json_file) unless blank?(json_file)
 # endregion android

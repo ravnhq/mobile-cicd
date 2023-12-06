@@ -9,7 +9,10 @@ private_lane :build do |options|
   gradle(task: 'clean', project_dir:)
 
   task = get_build_task(default: options[:default_artifact] || 'aab')
-  build_type = ENV['FL_ANDROID_BUILD_TYPE'] || 'Release'
+
+  build_type = ENV['FL_ANDROID_BUILD_TYPE']
+  build_type = 'Release' if blank?(build_type)
+
   flavor = ENV['FL_ANDROID_FLAVOR']
   properties = get_build_properties
 
@@ -62,20 +65,20 @@ private_lane :get_build_properties do
 
   # Set signing variables optionally, let the build process fail if any of them is not set
   store_file = ENV['FL_ANDROID_STORE_FILE']
-  properties['android.injected.signing.store.file'] = store_file if !skip_signing && store_file
+  properties['android.injected.signing.store.file'] = store_file if !skip_signing && !blank?(store_file)
 
   store_password = ENV['FL_ANDROID_STORE_PASSWORD']
-  properties['android.injected.signing.store.password'] = store_password if !skip_signing && store_password
+  properties['android.injected.signing.store.password'] = store_password if !skip_signing && !blank?(store_password)
 
   key_alias = ENV['FL_ANDROID_KEY_ALIAS']
-  properties['android.injected.signing.key.alias'] = key_alias if !skip_signing && key_alias
+  properties['android.injected.signing.key.alias'] = key_alias if !skip_signing && !blank?(key_alias)
 
   key_password = ENV['FL_ANDROID_KEY_PASSWORD']
-  properties['android.injected.signing.key.password'] = key_password if !skip_signing && key_password
+  properties['android.injected.signing.key.password'] = key_password if !skip_signing && !blank?(key_password)
 
   # Overwrite version.code property if build number environment variable is a valid number
   build_number = ENV['FL_BUILD_NUMBER']
-  is_build_number_valid = build_number && !Integer(build_number.strip, exception: false).nil?
+  is_build_number_valid = !blank?(build_number) && !Integer(build_number.strip, exception: false).nil?
   properties['version.code'] = build_number if is_build_number_valid
 
   properties

@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative '../util/util'
+
 module Fastlane
   module Actions
     module SharedValues
@@ -15,12 +17,13 @@ module Fastlane
         properties_contents = File.read(properties_file)
 
         version_code = params[:version_code]
-        version_code ||= get_version_code(properties_contents)
+        version_code = get_version_code(properties_contents) if blank?(version_code)
         version_code = [version_code.to_i, 1].max
 
         updated_contents = properties_contents.gsub!(/^\s*version\.code\s*=\s*\S+/, "version.code=#{version_code}")
-        updated_contents ||= properties_contents + "\nversion.code=#{version_code}"
+        updated_contents = properties_contents + "\nversion.code=#{version_code}" if blank?(updated_contents)
 
+        # noinspection RubyMismatchedArgumentType
         File.write(properties_file, updated_contents)
 
         Actions.lane_context[SharedValues::INCREMENT_VERSION_CODE_VALUE] = version_code

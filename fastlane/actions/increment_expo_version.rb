@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'json'
+require_relative '../util/util'
 
 module Fastlane
   module Actions
@@ -22,7 +23,7 @@ module Fastlane
       def self.increment_android_version_code(version_code)
         app_config = read_app_json_config
         android_config = app_config.fetch('expo', {}).fetch('android', {})
-        version_code ||= android_config.fetch('versionCode', 0) + 1
+        version_code = android_config.fetch('versionCode', 0) + 1 if blank?(version_code)
         android_config['versionCode'] = version_code
         Actions.lane_context[SharedValues::INCREMENT_EXPO_VERSION_ANDROID_VALUE] = version_code
 
@@ -33,7 +34,7 @@ module Fastlane
       def self.increment_ios_build_number(build_number)
         app_config = read_app_json_config
         ios_config = app_config.fetch('expo', {}).fetch('ios', {})
-        build_number ||= (Integer(ios_config['buildNumber'], exception: false) || 0) + 1
+        build_number = (Integer(ios_config['buildNumber'], exception: false) || 0) + 1 if blank?(build_number)
         ios_config['buildNumber'] = build_number.to_s
         Actions.lane_context[SharedValues::INCREMENT_EXPO_VERSION_IOS_VALUE] = build_number.to_s
 
