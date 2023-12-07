@@ -36,8 +36,7 @@ script will rename it to `fastlane.old`.
 
 > **Note:** Check other sections for configuration and then come back to this section to run locally.
 
-To run locally you can either use `bundle exec` (preferred) or `fastlane` if installed, for example, to run with
-`bundle exec` you can do:
+To run locally use `bundle exec`, for example:
 
 ```shell
 bundle exec fastlane android beta
