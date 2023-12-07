@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
-script_path=$(realpath "$0" &> /dev/null || pwd)
-script_dir=$(dirname "${script_path}")
+script_dir=$(dirname $(realpath "$0" 2> /dev/null) || pwd)
 destination=${1:-'..'} # read first arg, default to '..' (previous dir)
 repo_dir="/tmp/ravn_mobile_ci_cd_$(date +%s)" # use /tmp folder
 
