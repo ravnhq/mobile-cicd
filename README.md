@@ -17,8 +17,8 @@
 
 # Installation
 
-Run the following command to install/update the configuration files into your project (run this command inside your root
-directory):
+Run the following command to install/update the configuration files into your project (run this command inside your
+project root directory):
 
 ```shell
 curl -s https://raw.githubusercontent.com/ravnhq/mobile-cicd/main/install.sh | bash
