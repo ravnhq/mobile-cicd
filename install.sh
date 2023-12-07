@@ -160,7 +160,7 @@ configure_platforms() {
 
 exec_bundle_install() {
   echo ":: Installing required fastlane plugins..."
-  bundle exec fastlane install_plugins > /dev/null 2>&1
+  bundle exec fastlane install_plugins > /dev/null
   bundle install > /dev/null
 }
 
