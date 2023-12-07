@@ -15,14 +15,13 @@
 - [x] iOS TestFlight
 - [x] iOS App Store
 
-# Setup
+# Installation
 
-Run the following commands to copy the configuration files contained in this repository into your own project:
+Run the following command to install/update the configuration files into your project (run this command inside your root
+directory):
 
 ```shell
-cd <your-project-dir>
 git clone git@github.com:ravnhq/mobile-cicd.git
-./mobile-cicd/install.sh
 ```
 
 The script will copy the configuration files over the root directory of your project, checking if any of them already
@@ -146,5 +145,3 @@ you can do it in a variety of ways:
 
 - [fastlane-android](.github/actions/fastlane-android/README.md): Action to build and publish Android applications
 - [fastlane-ios](.github/actions/fastlane-ios/README.md): Action to build and publish iOS applications
-
-## CircleCI

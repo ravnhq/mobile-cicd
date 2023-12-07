@@ -3,6 +3,7 @@
 script_path=$(realpath "$0")
 script_dir=$(dirname "${script_path}")
 destination=${1:-'..'} # read first arg, default to '..' (previous dir)
+repo_dir="/tmp/ravn_mobile_ci_cd_$(date +%s)" # use /tmp folder
 
 confirm() {
   local prompt="$1"
@@ -53,6 +54,14 @@ copy_file() {
   if [[ ! -f "${destination}/$1" ]] || confirm ":: File $1 already exists, do you want to replace it?"; then
     cp "$1" "${destination}/"
   fi
+}
+
+clone_repository() {
+  git clone https://github.com/ravnhq/mobile-cicd "${repo_dir}"
+}
+
+remove_repository() {
+  [[ -d "${repo_dir}" ]] && rm -rf "${script_dir}/${repo_dir}"
 }
 
 backup_existing_fastlane() {
@@ -151,6 +160,7 @@ configure_platforms() {
 
 exec_bundle_install() {
   bundle install
+  bundle exec fastlane install_plugins
 }
 
 # Copy GitHub actions (with confirmation)
@@ -172,7 +182,9 @@ copy_github_actions() {
   fi
 }
 
-cd "${script_dir}" || exit
+clone_repository
+
+cd "${script_dir}/${repo_dir}" || exit
 
 platform=$(question ":: Platform to copy" "android, ios, all" "all")
 
@@ -180,7 +192,10 @@ copy_ruby_files
 confirm ":: Copy fastlane files?" 'Y' && copy_fastlane "${platform}"
 configure_platforms "${platform}"
 copy_github_actions "${platform}"
-confirm ":: Execute 'bundle install' to install gems?" 'Y' && exec_bundle_install
+exec_bundle_install
 
 cd - &> /dev/null || echo ":: Couldn't go back to previous dir" || exit
-echo ":: Finished! You can now remove this repository directory"
+
+remove_repository
+
+echo ":: Finished installation/update!"
