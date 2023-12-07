@@ -117,7 +117,7 @@ configure_cocoapods() {
     return
   fi
 
-  if ! confirm ":: Does your iOS project use CocoaPods? (most multiplatform projects do)"; then
+  if ! confirm ":: Does your iOS project use CocoaPods? (most multiplatform projects do)" 'Y'; then
     perl -i -ne "print unless /gem\s+'cocoapods'/" "${destination}/Gemfile"
   fi
 }
