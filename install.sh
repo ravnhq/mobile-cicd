@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 script_dir=$(dirname "$(realpath "$0" 2> /dev/null)" || pwd)
-destination=$(realpath "${1:-..}") # read first arg, default to '..' (previous dir)
+destination=$(realpath "${1:-$(pwd)}") # read first arg, default to current dir
 repo_dir="/tmp/ravn_mobile_ci_cd_$(date +%s)" # use /tmp folder
 
 confirm() {
