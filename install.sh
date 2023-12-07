@@ -146,8 +146,6 @@ copy_ruby_files() {
 
 # Copy fastlane directory (backup any previous version)
 copy_fastlane() {
-  local platform="$1"
-
   backup_existing_fastlane
   copy_recursively fastlane "${destination}/fastlane"
 }
@@ -189,7 +187,7 @@ cd "${repo_dir}" || exit
 platform=$(question ":: Platform to copy" "android, ios, all" "all")
 
 copy_ruby_files
-confirm ":: Copy fastlane files?" 'Y' && copy_fastlane "${platform}"
+confirm ":: Copy fastlane files?" 'Y' && copy_fastlane
 configure_platforms "${platform}"
 copy_github_actions "${platform}"
 exec_bundle_install
