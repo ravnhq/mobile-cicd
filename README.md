@@ -21,7 +21,7 @@ Run the following command to install/update the configuration files into your pr
 directory):
 
 ```shell
-git clone git@github.com:ravnhq/mobile-cicd.git
+curl -s https://raw.githubusercontent.com/ravnhq/mobile-cicd/main/install.sh | bash
 ```
 
 The script will copy the configuration files over the root directory of your project, checking if any of them already
