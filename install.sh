@@ -183,7 +183,6 @@ copy_github_actions() {
 }
 
 clone_repository
-
 cd "${repo_dir}" || exit
 
 platform=$(question ":: Platform to copy" "android, ios, all" "all")
@@ -195,7 +194,5 @@ copy_github_actions "${platform}"
 exec_bundle_install
 
 cd - &> /dev/null || echo ":: Couldn't go back to previous dir" || exit
-
-remove_repository
-
+remove_repository || true
 echo ":: Finished installation/update!"
