@@ -160,7 +160,7 @@ configure_platforms() {
 
 exec_bundle_install() {
   bundle exec fastlane install_plugins
-  bundle install
+  bundle install > /dev/null
 }
 
 # Copy GitHub actions (with confirmation)
