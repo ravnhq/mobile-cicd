@@ -1,3 +1,10 @@
+GIT
+  remote: https://github.com/ravnhq/fastlane-plugin-ravn_mobile
+  revision: 991cffb47ecbb2582ba2c65236f1b96cbe8ae5dc
+  tag: 0.1.0
+  specs:
+    fastlane-plugin-ravn_mobile (0.1.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -300,6 +307,7 @@ PLATFORMS
 DEPENDENCIES
   cocoapods
   fastlane
+  fastlane-plugin-ravn_mobile!
   rubocop
 
 BUNDLED WITH
