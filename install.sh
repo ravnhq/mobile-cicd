@@ -15,7 +15,7 @@ confirm() {
     values='(y/N)'
   fi
 
-  read -rp "${prompt} ${values}: " yn
+  read -rp "${prompt} ${values}: " yn <&2
 
   yn=${yn:-$default}
   yn=$(echo "$yn" | awk '{print tolower($0)}')
@@ -36,7 +36,7 @@ question() {
   local regex
 
   while true; do
-    read -rp "${prompt} (values: ${values})? [default: ${default}]: " answer
+    read -rp "${prompt} (values: ${values})? [default: ${default}]: " answer <&2
       answer=${answer:-$default}
 
       regex="^($(echo "$values" | sed 's/, */|/g'))$"
