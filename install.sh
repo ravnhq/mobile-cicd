@@ -56,11 +56,12 @@ copy_file() {
 }
 
 clone_repository() {
-  git clone https://github.com/ravnhq/mobile-cicd "${repo_dir}"
+  echo ":: Downloading required files..."
+  git clone https://github.com/ravnhq/mobile-cicd "${repo_dir}" &> /dev/null
 }
 
 remove_repository() {
-  [[ -d "${repo_dir}" ]] && rm -rf "${script_dir}/${repo_dir}"
+  [[ -d "${script_dir}/${repo_dir}" ]] && rm -rf "${script_dir:?}/${repo_dir}"
 }
 
 backup_existing_fastlane() {
