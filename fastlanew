@@ -63,8 +63,9 @@ load_dotenv() {
 
 if [[ "$1" == "self-update" ]]; then
   echo ":: Checking if there's a new update..."
-  check_auto_update
+  check_auto_update || exit 0
 fi
 
+[[ $- == *i* ]] && (check_auto_update || true)
 load_dotenv
 bundle exec fastlane "$@"
