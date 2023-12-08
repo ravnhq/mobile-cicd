@@ -102,7 +102,7 @@ project do the following:
    ```
    or with Gradle KTS (`build.gradle.kts`):
    ```kotlin
-   versionCode = property("version.code").toInt()
+   versionCode = property("version.code").toString().toInt()
    ```
 3. That's it, all your Android builds will use the value from the `gradle.properties` that's automatically updated by
    this pipeline.
