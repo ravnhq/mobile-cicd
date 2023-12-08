@@ -70,6 +70,10 @@ remove_repository() {
 
 backup_existing_fastlane() {
   if [[ -d "${destination}/fastlane" ]]; then
+    if ! confirm ":: Found an existing fastlane/ directory, do you want keep a backup?" 'Y'; then
+      return
+    fi
+
     echo ":: Copying existing fastlane/ directory to fastlane.old/"
     if [[ -d "${destination}/fastlane.old" ]]; then
       if confirm ":: Directory fastlane.old/ already exists, remove it?" 'Y'; then
