@@ -142,7 +142,7 @@ you can do it in a variety of ways:
 3. Adding new private lanes (prefer to add them in the `fastlane/lanes` directory as the `fastlane/Fastfile` file should
    only contain public lanes)
 
-# Running on CI
+# Running on CI/CD services
 
 ## GitHub Actions
 
