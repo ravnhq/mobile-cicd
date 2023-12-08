@@ -50,7 +50,7 @@ question() {
 }
 
 copy_file() {
-  if [[ ! -f "${destination}/$1" ]] || confirm ":: File $1 already exists, do you want to replace it?"; then
+  if [[ ! -f "${destination}/$1" ]] || confirm ":: File $1 already exists, do you want to replace it?" 'Y'; then
     cp "$1" "${destination}/"
   fi
 }
