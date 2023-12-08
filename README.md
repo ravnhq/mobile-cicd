@@ -137,7 +137,6 @@ you can do it in a variety of ways:
    lanes.
 2. Modifying private lanes, note however that these usually contain more moving parts, if you're unsure on how or where
    to add your modifications contact one of the maintainers of this repository.
-    - Common lanes are defined in the `fastlane/lanes/common.rb` file
     - iOS lanes are defined in the `fastlane/lanes/ios.rb` file
     - Android lanes are defined in the `fastlane/lanes/android.rb` file
 3. Adding new private lanes (prefer to add them in the `fastlane/lanes` directory as the `fastlane/Fastfile` file should
