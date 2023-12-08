@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # NOTE: Must match value from .version file for auto-update to work correctly
-readonly VERSION="0.0.1"
+readonly VERSION="0.1.0"
 readonly SCRIPT="$0"
 
 if ! command -v bundle &> /dev/null; then
