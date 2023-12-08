@@ -35,23 +35,21 @@ script will rename it to `fastlane.old`.
 
 > **Note:** Check other sections for configuration and then come back to this section to run locally.
 
-To run locally use `bundle exec`, for example:
+To run locally use the provided wrapper `fastlanew`, for example:
 
 ```shell
-bundle exec fastlane android beta
+./fastlanew android beta
 ```
-
-Here are the following available platforms and lanes:
 
 #### Android
 
-- `bundle exec fastlane android beta`
-- `bundle exec fastlane android release`
+- `./fastlanew android beta`
+- `./fastlanew android release`
 
 #### iOS
 
-- `bundle exec fastlane ios beta`
-- `bundle exec fastlane ios release`
+- `./fastlanew ios beta`
+- `./fastlanew ios release`
 
 # Authentication
 

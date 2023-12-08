@@ -15,5 +15,5 @@ fi
 [[ -z "${FL_XCODE_WORKSPACE}" ]] && unset FL_XCODE_WORKSPACE
 [[ -z "${FL_APPLE_ENTERPRISE}" ]] && unset FL_APPLE_ENTERPRISE
 
-# Execute fastlane with bundle
-bundle exec fastlane ios "${BUILD_LANE}"
+# Execute fastlane using wrapper
+./fastlanew ios "${BUILD_LANE}"

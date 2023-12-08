@@ -49,6 +49,10 @@ question() {
   done
 }
 
+copy_fastlane_wrapper() {
+  cp "fastlanew" "${destination}/"
+}
+
 copy_file() {
   if [[ ! -f "${destination}/$1" ]] || confirm ":: File $1 already exists, do you want to replace it?" 'Y'; then
     cp "$1" "${destination}/"
@@ -186,6 +190,7 @@ cd "${repo_dir}" || exit
 
 platform=$(question ":: Platform to copy" "android, ios, all" "all")
 
+copy_fastlane_wrapper
 copy_ruby_files
 confirm ":: Copy fastlane files?" 'Y' && copy_fastlane
 configure_platforms "${platform}"

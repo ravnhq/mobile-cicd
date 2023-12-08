@@ -49,5 +49,5 @@ else
   [[ -z "${FL_ANDROID_KEY_PASSWORD}" ]] && unset FL_ANDROID_KEY_PASSWORD
 fi
 
-# Execute fastlane with bundle
-bundle exec fastlane android "${BUILD_LANE}"
+# Execute fastlane using wrapper
+./fastlanew android "${BUILD_LANE}"
