@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 readonly VERSION="0.0.1"
+readonly SCRIPT="$0"
 
 if ! command -v bundle &> /dev/null; then
   echo "Error: bundle is not installed." >&2
@@ -43,7 +44,9 @@ check_auto_update() {
   remote_version=$(curl -s "${version_url}" | sed 's/[[:space:]]//g')
 
   if [[ "${VERSION}" != "${remote_version}" ]]; then
-    confirm ":: New version available, do you want to update?" 'Y' && exec_install
+    confirm ":: New version available, do you want to update?" 'Y' \
+      && exec_install \
+      && exec "${SCRIPT}" "$@"
   fi
 }
 
@@ -54,6 +57,6 @@ load_dotenv() {
   set +o allexport
 }
 
-check_auto_update
+check_auto_update "$@"
 load_dotenv
 bundle exec fastlane "$@"
