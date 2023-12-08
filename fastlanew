@@ -7,7 +7,8 @@ fi
 
 load_dotenv() {
   set -o allexport
-  [[ -f .env ]] && source .env
+  # shellcheck disable=SC1090
+  [[ -f .env ]] && source <(sed -e '/^#/d;/^\s*$/d' -e "s/'/'\\\''/g" -e "s/=\(.*\)/='\1'/g" .env)
   set +o allexport
 }
 
