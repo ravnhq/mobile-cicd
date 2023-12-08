@@ -115,14 +115,14 @@ project do the following:
 
 #### iOS identifier and Android package name
 
-> **Prerequisite:** Run `npx expo prebuild` to generate an initial `app.json` file or write one yourself.
+> **Prerequisite:** Run `npx expo prebuild` to generate an initial `app.json` file or write one from scratch.
 
 Inside your `app.json` file make sure that the values for `expo.ios.bundleIdentifier` and `expo.android.package` are not
 empty, and they match the values for the environment variables `FL_APP_IDENTIFIER` and `FL_PACKAGE_NAME` respectively.
 
 #### Application versioning
 
-> **Prerequisite:** Run `npx expo prebuild` to generate an initial `app.json` file or write one yourself.
+> **Prerequisite:** Run `npx expo prebuild` to generate an initial `app.json` file or write one from scratch.
 
 Inside your `app.json` file write the initial values for `expo.android.versionCode`
 and `expo.ios.buildNumber`, if not found by default starts with 1. Other versioning rules from environment variables
