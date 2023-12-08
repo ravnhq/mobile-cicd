@@ -3,7 +3,6 @@
 # Uncomment the line if you want fastlane to automatically update itself
 # update_fastlane
 
-import './lanes/common.rb'
 import './util/util.rb'
 
 # Optional: Change default platform if needed
