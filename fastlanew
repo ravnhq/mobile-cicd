@@ -2,7 +2,6 @@
 
 # NOTE: Must match value from .version file for auto-update to work correctly
 readonly VERSION="0.1.0"
-readonly SCRIPT="$0"
 
 if ! command -v bundle &> /dev/null; then
   echo "Error: bundle is not installed." >&2
@@ -47,7 +46,8 @@ check_auto_update() {
   if [[ "${VERSION}" != "${remote_version}" ]]; then
     confirm ":: New version available, do you want to update?" 'Y' \
       && exec_install \
-      && exec "${SCRIPT}" "$@"
+      && echo ":: Successfully updated, commit your changes before running this again" \
+      && exit 0
   fi
 }
 
