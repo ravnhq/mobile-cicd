@@ -39,7 +39,7 @@ exec_install() {
 }
 
 check_auto_update() {
-  if [[ $- != *i* ]]; then
+  if ! [[ $- == *i* ]]; then
     echo ":: Update check skipped, the terminal is not interactive"
     return 0
   fi
@@ -69,7 +69,8 @@ load_dotenv() {
 
 if [[ "$1" == "self-update" ]]; then
   echo ":: Checking if there's a new update..."
-  check_auto_update || exit 0
+  check_auto_update || true
+  exit 0
 fi
 
 check_auto_update || true
