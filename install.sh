@@ -121,11 +121,7 @@ remove_platform_code() {
 configure_cocoapods() {
   local platform="$1"
 
-  if ! [[ "${platform}" =~ (ios|all) ]]; then
-    return
-  fi
-
-  if ! confirm ":: Does your iOS project use CocoaPods? (most multiplatform projects do)" 'Y'; then
+  if ! [[ "${platform}" =~ (ios|all) ]] || ! confirm ":: Does your iOS project use CocoaPods? (most multiplatform projects do)" 'Y'; then
     perl -i -ne "print unless /gem\s+'cocoapods'/" "${destination}/Gemfile"
   fi
 }
