@@ -2,7 +2,7 @@
 
 # NOTE TO USER: DO NOT CHANGE!
 # NOTE TO DEV: Match version in .version
-readonly VERSION="0.1.3"
+readonly VERSION="0.1.4"
 
 if ! command -v bundle &> /dev/null; then
   echo "Error: bundle is not installed." >&2
@@ -39,6 +39,11 @@ exec_install() {
 }
 
 check_auto_update() {
+  if [[ $- != *i* ]]; then
+    echo ":: Update check skipped, the terminal is not interactive"
+    return 0
+  fi
+
   local version_url='https://raw.githubusercontent.com/ravnhq/mobile-cicd/main/.version'
   local remote_version
 
@@ -67,6 +72,6 @@ if [[ "$1" == "self-update" ]]; then
   check_auto_update || exit 0
 fi
 
-[[ $- == *i* ]] && (check_auto_update || true)
+check_auto_update || true
 load_dotenv
 bundle exec fastlane "$@"
