@@ -5,7 +5,11 @@ if ! command -v bundle &> /dev/null; then
   exit 1
 fi
 
-# Export variables from here to make sure some like JAVA_HOME are set correctly
-[[ -f .env ]] && export "$(grep -vE "^(#.*|\s*)$" .env)"
+load_dotenv() {
+  set -o allexport
+  [[ -f .env ]] && source .env
+  set +o allexport
+}
 
-JAVA_HOME="$JAVA_HOME" bundle exec fastlane "$@"
+load_dotenv
+bundle exec fastlane "$@"
