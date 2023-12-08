@@ -1,9 +1,51 @@
 #!/usr/bin/env bash
 
+readonly VERSION="0.0.1"
+
 if ! command -v bundle &> /dev/null; then
   echo "Error: bundle is not installed." >&2
   exit 1
 fi
+
+confirm() {
+  local prompt="$1"
+  local default=${2:-N}
+  local values
+
+  if [[ "${default}" = 'Y' ]]; then
+    values='(Y/n)'
+  else
+    values='(y/N)'
+  fi
+
+  read -rp "${prompt} ${values}: " yn <&2
+
+  yn=${yn:-$default}
+  yn=$(echo "$yn" | awk '{print tolower($0)}')
+  case "${yn}" in
+    y|yes)
+      return 0
+      ;;
+    *)
+      return 1
+      ;;
+  esac
+}
+
+exec_install() {
+  curl -s https://raw.githubusercontent.com/ravnhq/mobile-cicd/main/install.sh | sh
+}
+
+check_auto_update() {
+  local version_url='https://raw.githubusercontent.com/ravnhq/mobile-cicd/main/.version'
+  local remote_version
+
+  remote_version=$(curl -s "${version_url}" | sed 's/[[:space:]]//g')
+
+  if [[ "${VERSION}" != "${remote_version}" ]]; then
+    confirm ":: New version available, do you want to update?" 'Y' && exec_install
+  fi
+}
 
 load_dotenv() {
   set -o allexport
@@ -12,5 +54,6 @@ load_dotenv() {
   set +o allexport
 }
 
+check_auto_update
 load_dotenv
 bundle exec fastlane "$@"
