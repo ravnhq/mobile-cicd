@@ -8,7 +8,7 @@ private_lane :build do |options|
   setup_expo_project(platform: 'android') if is_expo
   gradle(task: 'clean', project_dir:)
 
-  task = get_build_task(default: options[:default_artifact] || 'aab')
+  task = get_build_task(default: fallback(options[:default_artifact], 'aab'))
 
   build_type = ENV['FL_ANDROID_BUILD_TYPE']
   build_type = 'Release' if blank?(build_type)
@@ -56,7 +56,7 @@ end
 
 desc 'Get Android build properties'
 private_lane :get_build_properties do
-  skip_signing = parse_boolean(ENV['FL_ANDROID_SKIP_SIGNING'] || 'false')
+  skip_signing = parse_boolean(ENV['FL_ANDROID_SKIP_SIGNING'], false)
 
   android_env_vars = %w[FL_ANDROID_STORE_FILE FL_ANDROID_STORE_PASSWORD FL_ANDROID_KEY_ALIAS FL_ANDROID_KEY_PASSWORD]
   ensure_env_vars(env_vars: android_env_vars) unless skip_signing
@@ -86,13 +86,8 @@ end
 
 desc 'Commit version bump and push'
 private_lane :commit_and_push do
-  if is_expo
-    commit_expo_app_json
-  else
-    project_dir = is_react_native || is_flutter ? 'android/' : './'
-    properties_path = File.join(project_dir, 'gradle.properties')
-    git_commit(path: [properties_path], message: 'chore: Version bump')
-  end
+  next unless parse_boolean(ENV['FL_COMMIT_INCREMENT'], false)
 
+  commit_version
   push_to_git_remote
 end

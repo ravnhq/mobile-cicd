@@ -1,7 +1,7 @@
 GIT
   remote: https://github.com/ravnhq/fastlane-plugin-ravn_mobile
-  revision: 991cffb47ecbb2582ba2c65236f1b96cbe8ae5dc
-  tag: 0.1.0
+  revision: fa74366ff7ad8d761bf2d0a37953dc0c3237d62a
+  tag: 0.1.2
   specs:
     fastlane-plugin-ravn_mobile (0.1.0)
 

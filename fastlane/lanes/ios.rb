@@ -8,7 +8,7 @@ private_lane :authenticate do
     key_id: ENV['FL_APPLE_KEY_ID']&.strip,
     issuer_id: ENV['FL_APPLE_ISSUER_ID']&.strip,
     duration: 1200,
-    in_house: parse_boolean(ENV['FL_APPLE_ENTERPRISE'] || 'false')
+    in_house: parse_boolean(ENV['FL_APPLE_ENTERPRISE'], false)
   )
 end
 
@@ -102,11 +102,9 @@ end
 
 desc 'Commit version bump and push'
 private_lane :commit_and_push do
-  if is_expo
-    commit_expo_app_json
-  else
-    commit_version_bump(message: 'chore: Version bump', xcodeproj: find_xcode_project)
-  end
+  next unless parse_boolean(ENV['FL_COMMIT_INCREMENT'], false)
 
+  ensure_env_vars(env_vars: %w[FL_XCODE_PROJ])
+  commit_version(xcodeproj: ENV['FL_XCODE_PROJ'])
   push_to_git_remote
 end
