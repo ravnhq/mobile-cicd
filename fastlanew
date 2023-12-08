@@ -8,4 +8,4 @@ fi
 # Export variables from here to make sure some like JAVA_HOME are set correctly
 [[ -f .env ]] && export "$(grep -vE "^(#.*|\s*)$" .env)"
 
-bundle exec fastlane "$@"
+JAVA_HOME="$JAVA_HOME" bundle exec fastlane "$@"
