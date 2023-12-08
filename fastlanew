@@ -56,7 +56,6 @@ check_auto_update() {
       && exit 0
   else
     echo ":: You're up-to-date!"
-    exit 0
   fi
 }
 
