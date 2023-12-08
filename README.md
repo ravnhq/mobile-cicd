@@ -59,13 +59,13 @@ them explicitly with `./fastlanew self-update`.
 
 # Authentication
 
-## Apple authentication
+#### Apple authentication
 
 Authentication to Apple services is done using an App Store Connect API key, check the environment variables that need
 to be set under the [.env.example](.env.example) and
 follow [this link](https://docs.fastlane.tools/app-store-connect-api/) to learn how to create a key.
 
-## Google authentication
+#### Google authentication
 
 Follow [this link](https://docs.fastlane.tools/getting-started/android/setup/#setting-up-supply) on how to get JSON key
 with Google Credentials to access Google APIs.
@@ -144,7 +144,7 @@ you can do it in a variety of ways:
 
 # Running on CI/CD services
 
-## GitHub Actions
+### GitHub Actions
 
 - [fastlane-android](.github/actions/fastlane-android/README.md): Action to build and publish Android applications
 - [fastlane-ios](.github/actions/fastlane-ios/README.md): Action to build and publish iOS applications
