@@ -39,7 +39,7 @@ exec_install() {
 }
 
 check_auto_update() {
-  if ! [[ $- == *i* ]]; then
+  if [[ ! -t 0 ]]; then
     echo ":: Update check skipped, the terminal is not interactive"
     return 0
   fi
