@@ -51,6 +51,12 @@ To run locally use the provided wrapper `fastlanew`, for example:
 - `./fastlanew ios beta`
 - `./fastlanew ios release`
 
+### Auto-updates
+
+Configuration files in this repository may update from time to time to support new use cases and functionality, one way
+to keep up-to-date is to let `fastlanew` check for updates automatically whenever any command is run or to check for
+them explicitly with `./fastlanew self-update`.
+
 # Authentication
 
 ## Apple authentication
