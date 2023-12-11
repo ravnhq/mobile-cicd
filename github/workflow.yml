@@ -1,0 +1,55 @@
+name: Push to main
+on:
+  push:
+    branches: [ main ] # modify accordingly
+
+jobs:
+  # region android
+  # See https://github.com/ravnhq/fastlane-android-action for more configuration options.
+  deploy-android:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build and publish
+        uses: ravnhq/fastlane-android-action@v1
+        with:
+          enforced-branch: main
+          build-lane: release
+          publish-build: true
+          package-name: com.example.application
+          google-json-key-base64: ${{ secrets.GOOGLE_JSON_KEY }}
+          artifact: aab
+          flavor: '' # if any
+          build-type: Release
+          skip-signing: false
+          key-store-base64: ${{ secrets.ANDROID_KEY_STORE }}
+          key-store-password: ${{ secrets.ANDROID_KEY_STORE_PASSWORD }}
+          key-alias: ${{ secrets.ANDROID_KEY_ALIAS }}
+          key-password: ${{ secrets.ANDROID_KEY_PASSWORD }}
+          # Read documentation for more inputs
+  # endregion android
+  # region ios
+  # See https://github.com/ravnhq/fastlane-ios-action for more configuration options.
+  deploy-ios:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build and publish
+        uses: ravnhq/fastlane-ios-action@v1
+        with:
+          enforced-branch: main
+          build-lane: release
+          publish-build: true
+          app-identifier: com.example.application
+          team-id: ${{ secrets.APPLE_TEAM_ID }}
+          scheme: MyApp
+          configuration: Release
+          xcodeproj: ./MyApp.xcodeproj
+          xcworkspace: ./MyApp.xcworkspace
+          apple-key-id: ${{ secrets.APPLE_KEY_ID }}
+          apple-issuer-id: ${{ secrets.APPLE_ISSUER_ID }}
+          apple-key-base64: ${{ secrets.APPLE_KEY }}
+          enterprise: false
+          match-password: ${{ secrets.MATCH_PASSWORD }}
+          # Read documentation for more inputs
+  # endregion ios

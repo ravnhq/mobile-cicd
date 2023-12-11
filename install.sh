@@ -150,6 +150,10 @@ copy_ruby_files() {
 
 # Copy fastlane directory (backup any previous version)
 copy_fastlane() {
+  if ! confirm ":: Copy fastlane files?" 'Y'; then
+    return 0
+  fi
+
   backup_existing_fastlane
   copy_recursively fastlane "${destination}/fastlane"
 }
@@ -166,23 +170,13 @@ exec_bundle_install() {
   bundle install > /dev/null
 }
 
-# Copy GitHub actions (with confirmation)
-copy_github_actions() {
-  local platform="$1"
-
-  android_action='.github/actions/fastlane-android'
-  if [[ "${platform}" =~ (android|all) ]] && confirm ":: Copy GitHub actions for Android (${android_action})?" 'Y'; then
-    [[ -d "${destination:?}/${android_action}" ]] && rm -rf "${destination:?}/${android_action}"
-    mkdir -p "${destination:?}/.github/actions"
-    cp -r "${android_action}" "${destination:?}/${android_action}"
+# Configure GitHub actions
+configure_github_actions() {
+  if ! confirm ":: Configure a basic GitHub Workflow?" 'Y'; then
+    return 0
   fi
 
-  ios_action='.github/actions/fastlane-ios'
-  if [[ "${platform}" =~ (ios|all) ]] && confirm ":: Copy GitHub actions for iOS (${ios_action})?" 'Y'; then
-    [[ -d "${destination:?}/${ios_action}" ]] && rm -rf "${destination:?}/${ios_action}"
-    mkdir -p "${destination:?}/.github/actions"
-    cp -r "${ios_action}" "${destination:?}/${ios_action}"
-  fi
+  copy_recursively github "${destination}/.github"
 }
 
 clone_repository
@@ -192,9 +186,9 @@ platform=$(question ":: Platform to copy" "android, ios, all" "all")
 
 copy_fastlane_wrapper
 copy_ruby_files
-confirm ":: Copy fastlane files?" 'Y' && copy_fastlane
+copy_fastlane
+configure_github_actions
 configure_platforms "${platform}"
-copy_github_actions "${platform}"
 exec_bundle_install
 
 cd - &> /dev/null || echo ":: Couldn't go back to previous dir" || exit
