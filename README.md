@@ -146,5 +146,9 @@ you can do it in a variety of ways:
 
 ### GitHub Actions
 
-- [fastlane-android](.github/actions/fastlane-android/README.md): Action to build and publish Android applications
-- [fastlane-ios](.github/actions/fastlane-ios/README.md): Action to build and publish iOS applications
+- [fastlane-android-action][fastlane-android-action]: Action to build and publish Android applications.
+- [fastlane-ios-action][fastlane-ios-action]: Action to build and publish iOS applications.
+
+[fastlane-android-action]: https://github.com/ravnhq/fastlane-android-action
+
+[fastlane-ios-action]: https://github.com/ravnhq/fastlane-ios-action
