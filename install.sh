@@ -94,6 +94,8 @@ remove_region() {
     local end_marker="# endregion $1"
     local file="$2"
 
+    [[ ! -f "${file}" ]] && return 0
+
     perl -i -ne "print unless /${start_marker}/../${end_marker}/" "${file}"
 }
 
@@ -113,9 +115,12 @@ remove_platform_code() {
        ;;
    esac
 
-   rm "${destination:?}/fastlane/lanes/${platform_to_remove}.rb"
+   local platform_lanes="${destination:?}/fastlane/lanes/${platform_to_remove}.rb"
+   [[ -f "${platform_lanes}" ]] && rm "${platform_lanes}"
+
    remove_region "${platform_to_remove}" "${destination}/fastlane/Appfile"
    remove_region "${platform_to_remove}" "${destination}/fastlane/Fastfile"
+   remove_region "${platform_to_remove}" "${destination}/.github/workflow.yml"
 }
 
 configure_cocoapods() {
@@ -176,7 +181,11 @@ configure_github_actions() {
     return 0
   fi
 
-  copy_recursively github "${destination}/.github"
+  if [[ -f "${destination}/.github/workflow.yml" ]] && ! confirm ":: Replace existing workflow.yml file? "; then
+    return 0
+  fi
+
+  copy_file "github/workflow.yml" "${destination}/.github"
 }
 
 clone_repository
