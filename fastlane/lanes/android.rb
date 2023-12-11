@@ -8,7 +8,7 @@ private_lane :build do |options|
   setup_expo_project(platform: 'android') if is_expo
   gradle(task: 'clean', project_dir:)
 
-  task = get_build_task(default: fallback(options[:default_artifact], 'aab'))
+  task = get_build_task(default: 'aab')
 
   build_type = ENV['FL_ANDROID_BUILD_TYPE']
   build_type = 'Release' if blank?(build_type)
