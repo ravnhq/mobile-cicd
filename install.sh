@@ -66,7 +66,7 @@ clone_repository() {
   remote_version=$(curl -s "${version_url}" | sed 's/[[:space:]]//g')
 
   echo ":: Downloading required files..."
-  if ! git clone --branch "${remote_version}" --depth 1 https://github.com/ravnhq/mobile-cicd "${repo_dir}" > /dev/null; then
+  if ! git clone --branch "${remote_version}" --depth 1 https://github.com/ravnhq/mobile-cicd "${repo_dir}" &> /dev/null; then
     echo ":: Failed to clone repository"
     exit 1
   fi
