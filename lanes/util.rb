@@ -1,6 +1,5 @@
-# frozen_string_literal: true
-
 # @param [String] value
+# @param [TrueClass, FalseClass] default
 # @return [TrueClass, FalseClass]
 def parse_boolean(value, default)
   value = value.downcase.strip
@@ -13,11 +12,4 @@ def blank?(obj)
   return obj.strip.empty? if obj.is_a?(String)
 
   obj.respond_to?(:empty?) ? obj.empty? : !obj
-end
-
-# @param [Object] obj
-# @param [Object] fallback
-# @return [Object] Either obj or fallback
-def fallback(obj, fallback)
-  blank?(obj) ? fallback : obj
 end

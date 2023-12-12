@@ -1,5 +1,10 @@
 # frozen_string_literal: true
 
+import_url = 'https://github.com/ravnhq/mobile-cicd'
+import_version = '~> 0.1'
+
+import_from_git(url: import_url, path: 'lanes/util.rb', version: import_version)
+
 desc 'Setup Apple App Store Connect authorization'
 private_lane :authenticate do
   ensure_env_vars(env_vars: %w[FL_APPLE_KEY_ID FL_APPLE_KEY_FILE FL_APPLE_ISSUER_ID])
@@ -20,7 +25,17 @@ private_lane :build do |options|
   xcodeproj = ENV['FL_XCODE_PROJ']
 
   type = options[:type]
-  live = options[:env] == 'release'
+  type = if blank?(type)
+           enterprise = parse_boolean(ENV['FL_APPLE_ENTERPRISE'], false)
+           enterprise ? 'enterprise' : 'appstore'
+         else
+           type
+         end
+
+  env = options[:env]
+  env = blank?(env) ? 'release' : env
+
+  live = env == 'release'
 
   configuration = ENV['FL_IOS_CONFIGURATION']&.strip || 'Release'
   configuration = 'Release' if blank?(configuration)
@@ -98,6 +113,26 @@ private_lane :configure_signing do |options|
     build_configurations:,
     code_sign_identity: 'iPhone Distribution' # fixme?: May need to change for other types of builds
   )
+end
+
+desc 'Upload to TestFlight or App Store '
+private_lane :upload do
+  enterprise = parse_boolean(ENV['FL_APPLE_ENTERPRISE'], false)
+  publish = parse_boolean(ENV['FL_PUBLISH_BUILD'], true)
+
+  next if enterprise || !publish
+
+  env = options[:env]
+  env = blank?(env) ? 'release' : env
+
+  case env
+  when 'release'
+    upload_to_app_store
+  when 'beta'
+    upload_to_testflight(skip_waiting_for_build_processing: is_ci)
+  else
+    UI.user_error!("Unknown environment for upload: #{env}")
+  end
 end
 
 desc 'Commit version bump and push'

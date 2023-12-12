@@ -3,10 +3,11 @@
 # Uncomment the line if you want fastlane to automatically update itself
 # update_fastlane
 
-import './util/util.rb'
-
 # Optional: Change default platform if needed
 # default_platform(:android)
+
+import_url = 'https://github.com/ravnhq/mobile-cicd'
+import_version = '~> 0.1'
 
 before_all do |_, _|
   enforced_branch = ENV['FL_ENFORCED_BRANCH']
@@ -18,30 +19,23 @@ before_all do |_, _|
   git_pull if enforced_branch
 
   # Optional: Execute extra actions after this line
-  # List of all available actions: https://docs.fastlane.tools/actions
 end
 
 # region android
 platform :android do
-  import './lanes/android.rb'
+  import_from_git(url: import_url, path: 'lanes/android.rb', version: import_version)
 
   desc 'Build and publish an Android beta version (Play Store Beta)'
   lane :beta do
     build(track: 'beta')
-
-    publish = parse_boolean(ENV['FL_PUBLISH_BUILD'], true)
-    upload_to_play_store(track: 'beta', track_promote_to: 'beta') if publish
-
+    upload(track: 'beta')
     commit_and_push
   end
 
   desc 'Build and publish an Android release version (Play Store)'
   lane :release do
-    build(track: 'production')
-
-    publish = parse_boolean(ENV['FL_PUBLISH_BUILD'], true)
-    upload_to_play_store if publish
-
+    build
+    upload
     commit_and_push
   end
 end
@@ -49,33 +43,21 @@ end
 
 # region ios
 platform :ios do
-  import './lanes/ios.rb'
+  import_from_git(url: import_url, path: 'lanes/ios.rb', version: import_version)
 
   desc 'Build and publish an iOS beta version (TestFlight)'
   lane :beta do
-    is_enterprise = parse_boolean(ENV['FL_APPLE_ENTERPRISE'], false)
-
     authenticate
-    build(type: is_enterprise ? 'enterprise' : 'appstore', env: 'beta')
-    UI.message('Skipping upload to TestFlight (FL_APPLE_ENTERPRISE is true)') if is_enterprise
-
-    publish = parse_boolean(ENV['FL_PUBLISH_BUILD'], true)
-    upload_to_testflight(skip_waiting_for_build_processing: is_ci) if publish && !is_enterprise
-
+    build(env: 'beta')
+    upload(env: 'beta')
     commit_and_push
   end
 
   desc 'Build and publish an iOS release version (App Store)'
   lane :release do
-    is_enterprise = parse_boolean(ENV['FL_APPLE_ENTERPRISE'], false)
-
     authenticate
-    build(type: is_enterprise ? 'enterprise' : 'appstore', env: 'release')
-    UI.message('Skipping upload to AppStore (FL_APPLE_ENTERPRISE is true)') if is_enterprise
-
-    publish = parse_boolean(ENV['FL_PUBLISH_BUILD'], true)
-    upload_to_app_store if publish && !is_enterprise
-
+    build
+    upload
     commit_and_push
   end
 end

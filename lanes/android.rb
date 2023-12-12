@@ -1,10 +1,18 @@
 # frozen_string_literal: true
 
+import_url = 'https://github.com/ravnhq/mobile-cicd'
+import_version = '~> 0.1'
+
+import_from_git(url: import_url, path: 'lanes/util.rb', version: import_version)
+
 desc 'Build Android project'
 private_lane :build do |options|
   project_dir = is_react_native || is_flutter || is_expo ? 'android/' : './'
 
-  update_build_number(track: options[:track], project_dir:)
+  track = options[:track]
+  track = blank?(track) ? 'production' : track
+
+  update_build_number(track:, project_dir:)
   setup_expo_project(platform: 'android') if is_expo
   gradle(task: 'clean', project_dir:)
 
@@ -82,6 +90,16 @@ private_lane :get_build_properties do
   properties['version.code'] = build_number if is_build_number_valid
 
   properties
+end
+
+desc 'Publish to Google Play Store'
+private_lane :upload do |options|
+  publish = parse_boolean(ENV['FL_PUBLISH_BUILD'], true)
+  next unless publish
+
+  track = options[:track]
+  track_promote_to = track == 'beta' ? track : nil
+  upload_to_play_store(track:, track_promote_to:)
 end
 
 desc 'Commit version bump and push'
