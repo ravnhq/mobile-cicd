@@ -60,8 +60,18 @@ copy_file() {
 }
 
 clone_repository() {
+  local version_url='https://raw.githubusercontent.com/ravnhq/mobile-cicd/main/.version'
+  local remote_version
+
+  remote_version=$(curl -s "${version_url}" | sed 's/[[:space:]]//g')
+
   echo ":: Downloading required files..."
-  git clone https://github.com/ravnhq/mobile-cicd "${repo_dir}" &> /dev/null
+  git clone --branch "${remote_version}" --depth 1 https://github.com/ravnhq/mobile-cicd "${repo_dir}" &> /dev/null
+
+  if [[ $? -ne 0 ]]; then
+    echo ":: Failed to clone repository..."
+    exit 1
+  fi
 }
 
 remove_repository() {
