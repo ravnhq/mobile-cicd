@@ -6,9 +6,6 @@
 # Optional: Change default platform if needed
 # default_platform(:android)
 
-import_url = 'https://github.com/ravnhq/mobile-cicd'
-import_version = '~> 0.1'
-
 before_all do |_, _|
   enforced_branch = ENV['FL_ENFORCED_BRANCH']
   UI.important('Fastlane is being run in a CI service, but no branch was enforced') if is_ci && !enforced_branch
@@ -23,7 +20,7 @@ end
 
 # region android
 platform :android do
-  import_from_git(url: import_url, path: 'lanes/android.rb', version: import_version)
+  import_ravn_lanes(platform: 'android')
 
   desc 'Build and publish an Android beta version (Play Store Beta)'
   lane :beta do
@@ -43,7 +40,7 @@ end
 
 # region ios
 platform :ios do
-  import_from_git(url: import_url, path: 'lanes/ios.rb', version: import_version)
+  import_ravn_lanes(platform: 'ios')
 
   desc 'Build and publish an iOS beta version (TestFlight)'
   lane :beta do

@@ -1,10 +1,5 @@
 # frozen_string_literal: true
 
-import_url = 'https://github.com/ravnhq/mobile-cicd'
-import_version = '~> 0.1'
-
-import_from_git(url: import_url, path: 'lanes/util.rb', version: import_version)
-
 desc 'Build Android project'
 private_lane :build do |options|
   project_dir = is_react_native || is_flutter || is_expo ? 'android/' : './'

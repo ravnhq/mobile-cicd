@@ -1,10 +1,5 @@
 # frozen_string_literal: true
 
-import_url = 'https://github.com/ravnhq/mobile-cicd'
-import_version = '~> 0.1'
-
-import_from_git(url: import_url, path: 'lanes/util.rb', version: import_version)
-
 desc 'Setup Apple App Store Connect authorization'
 private_lane :authenticate do
   ensure_env_vars(env_vars: %w[FL_APPLE_KEY_ID FL_APPLE_KEY_FILE FL_APPLE_ISSUER_ID])
