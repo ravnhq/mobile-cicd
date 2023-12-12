@@ -155,7 +155,7 @@ GEM
       xcodeproj (>= 1.13.0, < 2.0.0)
       xcpretty (~> 0.3.0)
       xcpretty-travis-formatter (>= 0.0.3)
-    fastlane-plugin-ravn_mobile (0.1.8)
+    fastlane-plugin-ravn_mobile (0.1.9)
     ffi (1.16.3)
     fourflusher (2.3.1)
     fuzzy_match (2.0.4)
