@@ -128,20 +128,6 @@ Inside your `app.json` file write the initial values for `expo.android.versionCo
 and `expo.ios.buildNumber`, if not found by default starts with 1. Other versioning rules from environment variables
 still apply (for example, `FL_BUILD_NUMBER=store` and `FL_COMMIT_INCREMENT=true`)
 
-# Extending
-
-As is, this pipeline process is simple, _build and publish_. If you need to add extra logic required by your project
-you can do it in a variety of ways:
-
-1. Modifying existing public lanes available in `fastlane/Fastfile` to add extra high-level steps, or adding new public
-   lanes.
-2. Modifying private lanes, note however that these usually contain more moving parts, if you're unsure on how or where
-   to add your modifications contact one of the maintainers of this repository.
-    - iOS lanes are defined in the `fastlane/lanes/ios.rb` file
-    - Android lanes are defined in the `fastlane/lanes/android.rb` file
-3. Adding new private lanes (prefer to add them in the `fastlane/lanes` directory as the `fastlane/Fastfile` file should
-   only contain public lanes)
-
 # Running on CI/CD services
 
 ### GitHub Actions
