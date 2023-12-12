@@ -55,6 +55,11 @@ private_lane :build do |options|
       signingStyle: 'manual'
     }
   )
+
+  # Copy IPAs and other output artifacts (always enabled for CI)
+  # NOTE: This only makes sense for `enterprise` and `ad-hoc` builds, which at this point only the former is supported.
+  copy_artifacts = parse_boolean(ENV['FL_COPY_ARTIFACTS'], true)
+  copy_output_artifacts if copy_artifacts || is_ci
 end
 
 desc 'Increment build number'

@@ -20,6 +20,10 @@ private_lane :build do |options|
   properties = get_build_properties
 
   gradle(task:, build_type:, flavor:, project_dir:, properties:)
+
+  # Copy APKs and AABs (and other outputs) for easy discovery (always enabled for CI)
+  copy_artifacts = parse_boolean(ENV['FL_COPY_ARTIFACTS'], true)
+  copy_output_artifacts if copy_artifacts || is_ci
 end
 
 desc 'Increment build number'
