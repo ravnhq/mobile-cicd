@@ -1,26 +1,20 @@
 # frozen_string_literal: true
 
-def blank?(obj)
-  return obj.strip.empty? if obj.is_a?(String)
-
-  obj.respond_to?(:empty?) ? obj.empty? : !obj
-end
-
 # region ios
 identifier = ENV['FL_APP_IDENTIFIER']
-app_identifier(identifier) unless blank?(identifier)
+app_identifier(identifier) unless !identifier || identifier.strip.empty?
 
 env_team_id = ENV['FL_TEAM_ID']
-team_id(env_team_id) unless blank?(env_team_id)
+team_id(env_team_id) unless !env_team_id || env_team_id.strip.empty?
 
 env_itc_team_id = ENV['FL_ITC_TEAM_ID']
-itc_team_id(env_itc_team_id) unless blank?(env_itc_team_id)
+itc_team_id(env_itc_team_id) unless !env_itc_team_id || env_itc_team_id.strip.empty?
 # endregion ios
 
 # region android
 android_name = ENV['FL_PACKAGE_NAME']
-package_name(android_name) unless blank?(android_name)
+package_name(android_name) unless !android_name || android_name.strip.empty?
 
 json_file = ENV['FL_GOOGLE_JSON_FILE']
-json_key_file(json_file) unless blank?(json_file)
+json_key_file(json_file) unless !json_file || json_file.strip.empty?
 # endregion android
