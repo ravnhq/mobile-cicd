@@ -1,7 +1,11 @@
 #!/usr/bin/env bash
 
-# NOTE TO USER: DO NOT CHANGE!
-# NOTE TO DEV: Match version in .version
+# NOTE TO USERS:
+# AUTO-UPDATED SCRIPT NO NEED TO REVIEW CHANGES! DO NOT CHANGE!
+
+# NOTE TO MAINTAINERS:
+# Bump version using release.sh script
+
 readonly VERSION="0.2.9"
 
 if ! command -v bundle &> /dev/null; then
