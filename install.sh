@@ -134,8 +134,8 @@ remove_platform_code() {
 configure_cocoapods() {
   local platform="$1"
 
-  if ! [[ "${platform}" =~ (ios|all) ]] || ! confirm ":: Does your iOS project use CocoaPods? (most multiplatform projects do)" 'Y'; then
-    perl -i -ne "print unless /gem\s+'cocoapods'/" "${destination}/Gemfile"
+  if [[ "${platform}" =~ (ios|all) ]] && confirm ":: Does your iOS project use CocoaPods? (most multiplatform projects do)" 'Y'; then
+    perl -i -pe "\$_.=\"gem 'cocoapods'\n\" if /gem 'fastlane'/" "${destination}/Gemfile"
   fi
 }
 
@@ -180,7 +180,8 @@ configure_platforms() {
 exec_bundle_install() {
   echo ":: Installing required fastlane plugins..."
   bundle exec fastlane install_plugins > /dev/null
-  bundle install > /dev/null && bundle update > /dev/null
+  bundle install > /dev/null
+  bundle update fastlane-plugin-ravn_mobile > /dev/null
 }
 
 # Configure GitHub actions
