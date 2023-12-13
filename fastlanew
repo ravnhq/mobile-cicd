@@ -71,6 +71,7 @@ load_dotenv() {
 }
 
 update_plugins() {
+  bundle install &> /dev/null
   bundle update fastlane-plugin-ravn_mobile
 }
 
