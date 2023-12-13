@@ -6,7 +6,7 @@
 # NOTE TO MAINTAINERS:
 # Bump version using release.sh script
 
-readonly VERSION="0.2.9"
+readonly VERSION="0.2.10"
 
 if ! command -v bundle &> /dev/null; then
   echo "Error: bundle is not installed." >&2
