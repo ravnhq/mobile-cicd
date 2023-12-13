@@ -156,9 +156,8 @@ copy_recursively() {
 
 # Copy Ruby files required by fastlane
 copy_ruby_files() {
-  copy_file .ruby-version
+  [[ ! -f "${destination}/.ruby-version" ]] && cp .ruby-version "${destination}/"
   copy_file Gemfile
-  copy_file Gemfile.lock
 }
 
 # Copy fastlane directory (backup any previous version)
