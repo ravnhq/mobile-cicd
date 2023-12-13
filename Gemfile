@@ -2,7 +2,6 @@
 
 source 'https://rubygems.org'
 
-gem 'cocoapods'
 gem 'fastlane'
 gem 'rubocop', group: 'development', require: false
 
