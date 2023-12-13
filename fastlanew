@@ -78,4 +78,5 @@ fi
 
 check_auto_update || true
 load_dotenv
+bundle update
 bundle exec fastlane "$@"
