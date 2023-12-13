@@ -45,7 +45,7 @@ end
 desc 'Get Android build task based on the artifact type: apk, aab'
 private_lane :get_build_task do |options|
   artifact = ENV['FL_ANDROID_ARTIFACT']
-  artifact = artifact.downcase.strip
+  artifact = artifact&.downcase&.strip
   unless %w[apk aab].include?(artifact)
     UI.important("FL_ANDROID_ARTIFACT set to unknown value '#{artifact}', defaulting to '#{options[:default]}'")
     artifact = options[:default]
