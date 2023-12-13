@@ -70,6 +70,10 @@ load_dotenv() {
   set +o allexport
 }
 
+update_plugins() {
+  bundle update fastlane-plugin-ravn_mobile
+}
+
 if [[ "$1" == "self-update" ]]; then
   echo ":: Checking if there's a new update..."
   check_auto_update || true
@@ -78,5 +82,5 @@ fi
 
 check_auto_update || true
 load_dotenv
-bundle update
+update_plugins
 bundle exec fastlane "$@"
