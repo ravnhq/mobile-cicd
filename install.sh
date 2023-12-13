@@ -55,7 +55,7 @@ copy_fastlane_wrapper() {
 
 copy_file() {
   if [[ ! -f "${destination}/$1" ]] || confirm ":: File $1 already exists, do you want to replace it?" 'Y'; then
-    cp "$1" "${destination}/"
+    cp "$1" "${destination}/$2"
   fi
 }
 
@@ -148,9 +148,9 @@ copy_recursively() {
     mkdir -p "${dst_dir}"
 
     find "${src_dir}" -type f | while read -r src_file; do
-        local dst_file="${dst_dir}/${src_file#$src_dir/}"
-        mkdir -p "$(dirname "${dst_file}")"
-        cp "${src_file}" "${dst_file}"
+      local dst_file="${dst_dir}/${src_file#$src_dir/}"
+      mkdir -p "$(dirname "${dst_file}")"
+      cp "${src_file}" "${dst_file}"
     done
 }
 
