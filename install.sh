@@ -178,8 +178,8 @@ configure_platforms() {
 
 exec_bundle_install() {
   echo ":: Installing required fastlane plugins..."
-  bundle exec fastlane install_plugins > /dev/null
   bundle install > /dev/null
+  bundle exec fastlane install_plugins > /dev/null
   bundle update fastlane-plugin-ravn_mobile > /dev/null
 }
 
