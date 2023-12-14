@@ -12,7 +12,7 @@ before_all do |_, _|
 
   setup_ci if is_ci
   ensure_git_branch(branch: enforced_branch) if enforced_branch
-  ensure_git_status_clean(ignore_files: ['Gemfile.lock'])
+  ensure_git_status_clean(ignore_files: ['Gemfile.lock']) unless is_ci
   git_pull if enforced_branch
 
   # Optional: Execute extra actions after this line
