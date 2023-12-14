@@ -193,9 +193,9 @@ configure_github_actions() {
     return 0
   fi
 
-  mkdir -p "${destination}/.github"
-  copy_file "github/workflow.yml" ".github/"
-  echo ":: Please modify .github/workflow.yml according to your needs"
+  mkdir -p "${destination}/.github/workflows"
+  copy_file "github/main.yml" ".github/workflows"
+  echo ":: Please modify .github/workflows/main.yml according to your needs"
 }
 
 clone_repository
