@@ -194,7 +194,7 @@ configure_github_actions() {
   fi
 
   mkdir -p "${destination}/.github"
-  copy_file "github/workflow.yml" "${destination}/.github/"
+  copy_file "github/workflow.yml" ".github/"
 }
 
 clone_repository
