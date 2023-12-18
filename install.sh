@@ -128,7 +128,7 @@ remove_platform_code() {
 
    remove_region "${platform_to_remove}" "${destination}/fastlane/Appfile"
    remove_region "${platform_to_remove}" "${destination}/fastlane/Fastfile"
-   remove_region "${platform_to_remove}" "${destination}/.github/workflow.yml"
+   remove_region "${platform_to_remove}" "${destination}/.github/workflows/main.yml"
 }
 
 configure_cocoapods() {
