@@ -116,7 +116,7 @@ private_lane :configure_signing do |options|
 end
 
 desc 'Upload to TestFlight or App Store '
-private_lane :upload do
+private_lane :upload do |options|
   enterprise = parse_boolean(ENV['FL_APPLE_ENTERPRISE'], false)
   publish = parse_boolean(ENV['FL_PUBLISH_BUILD'], true)
 
