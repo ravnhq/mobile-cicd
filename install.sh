@@ -22,6 +22,7 @@ elif [[ "${OS_NAME}" = "Linux" ]]; then
   curl -sL https://github.com/ravnhq/mobile-cicd-installer/releases/latest/download/installer-linux -o "${TMP_EXEC}" \
     && chmod +x "${TMP_EXEC}" \
     && exec "${TMP_EXEC}" -d "${DESTINATION}" -i
+
 else
   echo -e "${LIGHT_RED}>${RESET_COLOR} Unknown operating system: ${OS_NAME}"
 fi
