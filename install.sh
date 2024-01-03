@@ -14,14 +14,14 @@ if [[ "${OS_NAME}" = "Darwin" ]]; then
   echo -e "${LIGHT_GREEN}>${RESET_COLOR} Downloading installer for macOS..."
   curl -sL https://github.com/ravnhq/mobile-cicd-installer/releases/latest/download/installer-macos -o "${TMP_EXEC}" \
     && chmod +x "${TMP_EXEC}" \
-    && script -q -c "${TMP_EXEC} -d ${DESTINATION} -i" /dev/null
+    && script -q /dev/null "${TMP_EXEC} -d ${DESTINATION} -i"
 
 elif [[ "${OS_NAME}" = "Linux" ]]; then
   echo -e "${LIGHT_GREEN}>${RESET_COLOR} Downloading installer for Linux..."
   mkdir -p "${TMP_DIR}"
   curl -sL https://github.com/ravnhq/mobile-cicd-installer/releases/latest/download/installer-linux -o "${TMP_EXEC}" \
     && chmod +x "${TMP_EXEC}" \
-    && script -q -c "${TMP_EXEC} -d ${DESTINATION} -i" /dev/null
+    && script -q /dev/null "${TMP_EXEC} -d ${DESTINATION} -i"
 
 else
   echo -e "${LIGHT_RED}>${RESET_COLOR} Unknown operating system: ${OS_NAME}"
