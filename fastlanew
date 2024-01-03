@@ -8,8 +8,12 @@
 
 readonly VERSION="0.3.1"
 
+readonly LIGHT_RED="\e[91m"
+readonly LIGHT_GREEN="\e[92m"
+readonly RESET_COLOR="\e[0m"
+
 if ! command -v bundle &> /dev/null; then
-  echo "Error: bundle is not installed." >&2
+  echo -e "${LIGHT_RED}>${RESET_COLOR} 'bundle' is not installed." >&2
   exit 1
 fi
 
@@ -24,7 +28,8 @@ confirm() {
     values='(y/N)'
   fi
 
-  read -rp "${prompt} ${values}: " yn <&2
+  echo -en "${prompt} ${values}: "
+  read -rp "" yn <&2
 
   yn=${yn:-$default}
   yn=$(echo "$yn" | awk '{print tolower($0)}')
@@ -44,7 +49,7 @@ exec_install() {
 
 check_auto_update() {
   if [[ ! -t 0 ]]; then
-    echo ":: Update check skipped, the terminal is not interactive"
+    echo -e "${LIGHT_GREEN}>${RESET_COLOR} Update check skipped, the terminal is not interactive"
     return 0
   fi
 
@@ -54,12 +59,12 @@ check_auto_update() {
   remote_version=$(curl -s "${version_url}" | sed 's/[[:space:]]//g')
 
   if [[ "${VERSION}" != "${remote_version}" ]]; then
-    confirm ":: New version available, do you want to update?" 'Y' \
+    confirm "${LIGHT_GREEN}>${RESET_COLOR} New version available, do you want to update?" 'Y' \
       && exec_install \
-      && echo ":: Successfully updated, commit your changes before running this again" \
+      && echo -e "${LIGHT_GREEN}>${RESET_COLOR} Successfully updated, commit your changes before running this again" \
       && exit 0
   else
-    echo ":: You're up-to-date!"
+    echo -e "${LIGHT_GREEN}>${RESET_COLOR} You're up-to-date!"
   fi
 }
 
@@ -76,7 +81,7 @@ update_plugins() {
 }
 
 if [[ "$1" == "self-update" ]]; then
-  echo ":: Checking if there's a new update..."
+  echo -e "${LIGHT_GREEN}>${RESET_COLOR} Checking if there's a new update..."
   check_auto_update || true
   exit 0
 fi
