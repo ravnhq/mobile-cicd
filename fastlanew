@@ -6,7 +6,7 @@
 # NOTE TO MAINTAINERS:
 # Bump version using release.sh script
 
-readonly VERSION="0.3.1"
+readonly VERSION="0.3.2"
 
 readonly LIGHT_RED="\e[91m"
 readonly LIGHT_GREEN="\e[92m"
