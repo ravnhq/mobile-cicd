@@ -39,7 +39,7 @@ confirm() {
 }
 
 exec_install() {
-  curl -s https://raw.githubusercontent.com/ravnhq/mobile-cicd/main/install.sh | sh
+  bash <(curl -s https://raw.githubusercontent.com/ravnhq/mobile-cicd/main/install.sh)
 }
 
 check_auto_update() {
