@@ -1,0 +1,3 @@
+[submodule "installer"]
+	path = installer
+	url = git@github.com:ravnhq/ravn-mobile-cicd-installer.git
