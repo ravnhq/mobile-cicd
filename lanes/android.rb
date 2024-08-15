@@ -97,8 +97,10 @@ private_lane :upload do |options|
   next unless publish
 
   track = options[:track]
+  release_status = options[:release_status]
+  release_status = blank?(release_status) ? nil : release_status
   track_promote_to = track == 'beta' ? track : nil
-  upload_to_play_store(track:, track_promote_to:)
+  upload_to_play_store(track:, track_promote_to:, release_status:)
 end
 
 desc 'Commit version bump and push'
